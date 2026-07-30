@@ -17,7 +17,7 @@ public partial class DataConfig : IConfig, IConnectionStringAccessor
     /// Gets or sets a data provider
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public DataProviderType DataProvider { get; set; } = DataProviderType.SqlServer;
+    public DataProviderType DataProvider { get; set; } = DataProviderType.PostgreSQL;
 
     /// <summary>
     /// Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error.
