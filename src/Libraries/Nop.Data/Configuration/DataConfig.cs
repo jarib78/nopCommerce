@@ -11,8 +11,14 @@ public partial class DataConfig : IConfig, IConnectionStringAccessor
     /// <summary>
     /// Gets or sets a connection string
     /// </summary>
-    public string ConnectionString { get; set; } = Environment.GetEnvironmentVariable("ConnectionStrings__ConnectionString") ?? string.Empty;
+    private string _connectionString = string.Empty;
 
+    public string ConnectionString
+    {
+        get => Environment.GetEnvironmentVariable("ConnectionStrings__ConnectionString") ?? _connectionString;
+        set => _connectionString = value;
+    }
+    
     /// <summary>
     /// Gets or sets a data provider
     /// </summary>
