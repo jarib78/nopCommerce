@@ -63,11 +63,11 @@ public partial class InstallationService
         var stores = new List<Store>
         {
             new() {
-                Name = "Your store name",
-                DefaultTitle = "Your store",
+                Name = "Vivencia",
+                DefaultTitle = "Vivencia",
                 DefaultMetaKeywords = string.Empty,
                 DefaultMetaDescription = string.Empty,
-                HomepageTitle = "Home page title",
+                HomepageTitle = "Home",
                 HomepageDescription = "Home page description",
                 Url = storeUrl,
                 SslEnabled = _webHelper.IsCurrentConnectionSecured(),
