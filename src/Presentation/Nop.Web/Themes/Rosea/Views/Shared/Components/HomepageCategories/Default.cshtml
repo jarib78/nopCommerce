@@ -1,0 +1,60 @@
+@model IList<CategoryModel>
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure
+@using Nop.Core
+@{
+
+    var rtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+}
+
+@if (Model.Count > 0)
+{
+    <div class="home-category-slider">
+        <div class="home-category-right">
+            <div class="owl-carousel category-carousel">
+                @foreach (var item in Model)
+                {
+                    <div class="OCarousel-item">
+                        <a class="category-list-img" href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                            <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            <h3 class="category-name">@item.Name</h3>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+
+        $('.category-carousel').owlCarousel({
+            nav: true,
+            loop: true,
+            dots: false,
+            margin: 10,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            autoplayHoverPause: true,
+            navText: ["@T("NopStation.Theme.Rosea.OCarousel.Nav.Prev")", "@T("NopStation.Theme.Rosea.OCarousel.Nav.Next")"],
+            rtl: @rtl.ToString().ToLower(),
+            responsive: {
+                0: {
+                    items: 2
+                },
+                576: {
+                    items: 2
+                },
+                768: {
+                    items: 2
+                },
+                992: {
+                    items: 3
+                },
+                1200: {
+                    items: 3
+                }
+            }
+        });
+    })
+</script>

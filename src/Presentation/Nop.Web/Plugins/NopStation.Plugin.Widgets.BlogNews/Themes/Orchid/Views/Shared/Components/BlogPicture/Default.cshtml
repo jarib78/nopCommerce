@@ -1,0 +1,6 @@
+﻿@model BlogPostPictureModel
+
+@if (Model.HasPicture)
+{
+    <img class="img-fluid blog-img" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" />
+}

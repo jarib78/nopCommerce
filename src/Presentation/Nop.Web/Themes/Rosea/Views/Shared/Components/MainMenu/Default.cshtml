@@ -1,0 +1,97 @@
+@model MenuModel
+
+@using Nop.Core.Domain.Menus;
+
+@{
+    Func<MenuItemModel, object> RenderMobileMenuItem = null;
+    RenderMobileMenuItem = @<text>
+        <li>
+            <a href="@item.Url">@item.Title</a>
+            @if (item.ChildrenItems.Any())
+            {
+                <div class="sublist-toggle"></div>
+                <ul class="sublist">
+                    @foreach (var childItem in item.ChildrenItems)
+                    {
+                        @RenderMobileMenuItem(childItem)
+                    }
+                </ul>
+            }
+        </li>
+    </text>;
+}
+
+<div class="menu-overlay"></div>
+
+<ul class="main-menu notmobile">
+    @foreach (var menuItem in Model.Items)
+    {
+        @if (menuItem.ChildrenItems.Any())
+        {
+            @switch (menuItem.Template)
+            {
+                case MenuItemTemplate.Grid:
+                    ViewBag.Level = 0;
+                    @await Html.PartialAsync("_MenuItem.Grid.cshtml", menuItem)
+                    break;
+                default:
+                    ViewBag.Level = 0;
+                    @await Html.PartialAsync("_MenuItem.List.cshtml", menuItem)
+                    break;
+            }
+        }
+        else
+        {
+            <li class="@menuItem.CssClass">
+                @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+            </li>
+        }
+    }
+</ul>
+
+<div class="menu-toggle">
+    <span class="icon-navbar"></span>
+</div>
+<ul class="main-menu mobile">
+    @foreach (var menuItem in Model.Items)
+    {
+        @RenderMobileMenuItem(menuItem)
+    }
+</ul>
+
+<script asp-location="Footer">
+    $(function() {
+        function closeMobileMenu() {
+            $('.main-menu.mobile').removeClass('active');
+            $('.menu-toggle').removeClass('active');
+            $('body').removeClass('menu-open');
+        }
+        
+        $('.menu-toggle').on('click', function () {
+            $(this).siblings('.main-menu.mobile').toggleClass('active');
+            $(this).toggleClass('active');
+            $('body').toggleClass('menu-open');
+        });
+        
+        $('.menu-overlay').on('click', function () {
+            closeMobileMenu();
+        });
+        
+        $('.main-menu.mobile .sublist-toggle').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $sublist = $(this).siblings('.sublist');
+            $sublist.slideToggle(200);
+            $sublist.toggleClass('show');
+            $(this).toggleClass('active');
+        });
+        
+        $('.main-menu.mobile > li > a').on('click', function (e) {
+            var $li = $(this).parent();
+            if ($li.find('.sublist-toggle').length > 0) {
+                return true;
+            }
+        });
+    });
+</script>
+

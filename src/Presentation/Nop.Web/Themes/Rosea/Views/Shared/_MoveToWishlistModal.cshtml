@@ -1,0 +1,98 @@
+@model ProductToWishlistModel
+@{
+    var moveToCustomWishlistLink = Url.RouteUrl(NopRouteNames.Ajax.MOVE_PRODUCT_TO_CUSTOM_WISHLIST, new { productId = Model.ProductId });
+}
+
+<div id="moveToWishlistModal_@Model.ProductId" title="@T("Wishlist.SelectWishlist")" style="display:none;">
+    <div class="wishlist-modal-content">
+        <div class="wishlist-buttons-container">
+            <button type="button"
+                    class="button-1 wishlist-modal-button wishlist-modal-button-add"
+                    data-action="add-new"
+                    data-product-id="@Model.ProductId">
+                @T("Wishlist.AddCustomWishlist")
+            </button>
+            @foreach (var customWishlist in Model.CustomWishlistItems)
+            {
+                <button type="button"
+                        class="button-2 wishlist-modal-button"
+                        data-action="move"
+                        data-product-id="@Model.ProductId"
+                        data-move-url="@moveToCustomWishlistLink"
+                        data-wishlist-id="@customWishlist.Id">
+                    @customWishlist.Name
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_AddWishlistModal", Model.ProductId)
+
+<script asp-location="Footer">
+    (function($) {
+        var productId = @Model.ProductId;
+        var dialogSelector = '#moveToWishlistModal_' + productId;
+
+        $(function() {
+            if (!$(dialogSelector).data('ui-dialog')) {
+                $(dialogSelector).dialog({
+                    autoOpen: false,
+                    modal: true,
+                    width: 400,
+                    closeOnEscape: true
+                });
+            }
+
+            $(dialogSelector).on('click', '.wishlist-modal-button', function(e) {
+                e.preventDefault();
+                var $btn = $(this);
+                var action = $btn.data('action');
+                var pid = $btn.data('product-id');
+
+                if (action === 'add-new') {
+                    window['closeMoveToWishlistModal_' + pid]();
+
+                    setTimeout(function() {
+                        showAddWishlistModal(pid);
+                    }, 200);
+                    return;
+                }
+
+                if (action === 'move') {
+                    var moveUrl = $btn.data('move-url');
+                    var wishlistId = $btn.data('wishlist-id');
+
+                    window['closeMoveToWishlistModal_' + pid]();
+
+                    setTimeout(function() {
+                        AjaxCart.moveproducttowishlist(moveUrl, wishlistId);
+                    }, 200);
+                }
+            });
+        });
+
+        window['showMoveToWishlistModal_' + productId] = function() {
+            $(dialogSelector).dialog('open');
+        };
+
+        window['closeMoveToWishlistModal_' + productId] = function() {
+            if ($(dialogSelector).hasClass('ui-dialog-content')) {
+                $(dialogSelector).dialog('close');
+            }
+        };
+    })(jQuery);
+
+    function showMoveToWishlistModal(productId) {
+        if (window['showMoveToWishlistModal_' + productId]) {
+            window['showMoveToWishlistModal_' + productId]();
+        }
+    }
+
+    function closeMoveToWishlistModal(productId) {
+        if (window['closeMoveToWishlistModal_' + productId]) {
+            window['closeMoveToWishlistModal_' + productId]();
+        }
+    }
+</script>
+

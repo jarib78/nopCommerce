@@ -1,0 +1,35 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@inject CatalogSettings catalogSettings
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/color.css");
+
+    //add main CSS file
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/rtl.css");
+    }
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/responsive{(supportRtl ? ".rtl" : "")}.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/owl.carousel.min.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/owl.theme.default.min.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/font-awesome.min.css");
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/OCarousel.css");
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/animate.css");
+
+    //add swiper css file
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+}

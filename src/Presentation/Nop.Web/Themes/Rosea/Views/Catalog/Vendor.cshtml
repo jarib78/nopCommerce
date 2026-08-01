@@ -1,0 +1,87 @@
+@model VendorModel
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Domain.Vendors;
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-vendor-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var vendorUrl = (await NopUrl.RouteGenericUrlAsync<Vendor>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
+        NopHtml.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
+}
+@section CatalogFilters {
+    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+}
+@section Breadcrumb
+    {
+    <div class="page-title">
+        <div class="breadcrumb">
+            <div class="section-container">
+                <h1>@Model.Name</h1>
+            </div>
+            <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                <li>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                    <span class="delimiter">/</span>
+                </li>
+                <li>
+                    <strong class="current-item" itemprop="name">  @T("Vendors.List") </strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsAfterBreadcrumb, additionalData = Model })
+}
+
+<div class="page vendor-page">
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsTop, additionalData = Model })
+        @*description*@
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="vendor-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @*contact vendor*@
+        @if (Model.AllowCustomersToContactVendors)
+        {
+            <div class="contact-vendor">
+                <input type="button" value="@T("ContactVendor")" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CONTACT_VENDOR, new { vendorId = Model.Id })')" />
+                @if (Model.PmCustomerId > 0)
+                {
+                    <button type="button" class="button-2 pm-vendor-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.SEND_PM, new { toCustomerId = Model.PmCustomerId })')">@T("SendPmToVendor")</button>
+                }
+            </div>
+        }
+
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.GET_VENDOR_PRODUCTS, new { vendorId = Model.Id }));
+        }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        
+        @await Html.PartialAsync("_VendorProductReviews", Model.ProductReviews.Reviews)
+
+        @if (Model.ProductReviews.PagingFilteringContext.TotalPages > 1)
+        {
+            <div class="block">
+                <a href="@Url.RouteUrl(NopRouteNames.Standard.VENDOR_REVIEWS, new { vendorId = Model.Id })">@T("Vendors.Reviews.All")</a>
+            </div>
+        }
+
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@model MenuItemModel
+
+<li class="@Model.CssClass" role="menuitem">
+    <a href="@Model.Url">@Model.Title</a>
+    @if (Model.ChildrenItems.Any())
+    {
+        <ul class="sublist @(ViewBag.Level == 0 ? "first-level" : "")" role="menu" aria-label="@Model.Title">
+            @foreach (var item in Model.ChildrenItems)
+            {
+                ViewBag.Level = (ViewBag.Level ?? 0) + 1;
+                @await Html.PartialAsync("_MenuItem.List.cshtml", item)
+                ViewBag.Level = (ViewBag.Level ?? 1) - 1;
+            }
+        </ul>
+    }
+</li>

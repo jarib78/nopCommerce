@@ -1,0 +1,10 @@
+﻿@model ViewComponentModel
+
+@if (Model.EnableOfferZone)
+{
+    @await Html.PartialAsync("NopStationOfferZone.cshtml", Model.OfferZone)
+}
+@if (Model.EnableAdvantageZone)
+{
+    @await Html.PartialAsync("AdvantageZone.cshtml", Model.AdvantageZone)
+}

@@ -1,0 +1,103 @@
+﻿@using System.Globalization
+@using Nop.Core.Domain
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Configuration
+@using Nop.Services.Events
+@using Nop.Services.Security
+@using Nop.Web.Framework.Events
+@using Nop.Core
+@using Nop.Core.Events
+@using Nop.Core.Domain.FilterLevels
+@inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
+@inject IPermissionService permissionService
+@inject IWorkContext workContext
+@inject SeoSettings seoSettings
+@inject AppSettings appSettings
+@inject StoreInformationSettings storeInformationSettings
+@inject INopHtmlHelper NopHtml
+@inject CatalogSettings catalogSettings
+@inject CommonSettings commonSettings
+@inject FilterLevelSettings filterLevelSettings
+
+@{
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
+    }
+    if (filterLevelSettings.FilterLevelEnabled && filterLevelSettings.DisplayOnHomePage)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.filterlevelselect.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {   
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/Themes/Rosea/Content/js/lazyload.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/Themes/Rosea/Content/js/main.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/Themes/Rosea/Content/js/owl.carousel.min.js");
+
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "/lib_npm/jquery/jquery.min.js");
+
+    //custom tag(s);
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+
+    //event
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
+<head>
+    <title>@await NopHtml.GenerateTitleAsync()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(await NopHtml.GenerateMetaDescriptionAsync())" />
+    <meta name="keywords" content="@(await NopHtml.GenerateMetaKeywordsAsync())" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @NopHtml.GenerateHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @NopHtml.GenerateCssFiles()
+    
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @NopHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
+    <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+
+    @Html.Raw(commonSettings.HeaderCustomHtml)
+</head>
+<body>
+    <nop-antiforgery-token />
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    @RenderBody()
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    @Html.Raw(commonSettings.FooterCustomHtml)
+</body>
+</html>

@@ -1,0 +1,90 @@
+﻿@model PublicModel
+@using Nop.Core
+@inject Nop.Core.IWebHelper webHelper
+@inject IThemeContext themeContext
+@inject IWorkContext workContext
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    if (supportRtl)
+    {
+        NopHtml.AddCssFileParts($"/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/{await themeContext.GetWorkingThemeNameAsync()}/Content/css/style.rtl.css", string.Empty);
+    }
+    else
+    {
+        NopHtml.AddCssFileParts($"/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/{await themeContext.GetWorkingThemeNameAsync()}/Content/css/style.css", string.Empty);
+
+    }
+}
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area">
+        @if (Model.BlogPosts.Any())
+        {
+            <div class="latest-blog-container">
+                <h2 class="title beautyShop-secondery-color-text beautyShop-big-title">@T("NopStation.BlogNews.Home.LatestBlog")</h2>
+                <div class="blog-container">
+                    @foreach (var item in Model.BlogPosts)
+                    {
+                        <div class="blog">
+                            <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                            <div class="latest-blog-container-Title-homepage">
+                                <h4 class="blog-title"><a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">@item.Title</a></h4>
+                                <div class="date-time beautyShop-primary-color-bg"><span class="pr-2">@item.CreatedOnUtcStr</span><span class="blog-comment">(@item.TotalComments)</span></div>
+                            </div>
+                            <div class="post-body">
+                                <p>@item.BodyOverview</p>
+                            </div>
+                            <a class="blog-link" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">@T("NopStation.BlogNews.Home.LatestBlog.ReadMore")</a>
+                            <ul class="blog-news-social">
+                                <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.NewsItems.Any())
+        {
+            <div class="latest-news-container">
+                <h2 class="title beautyShop-secondery-color-text beautyShop-big-title">@T("NopStation.BlogNews.Home.LatestNews")</h2>
+                <div class="news-container">
+                    @foreach (var item in Model.NewsItems)
+                    {
+                        <div class="news">
+                            <div class="news-box-inner">
+                                <div class="news-container">
+                                    <div class="news-image-container">
+                                        <div class="news-image">
+                                            <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                        </div>
+                                    </div>
+                                    <div class="news-text-container">
+                                        <div class="news-text">
+                                            <h4><a class="news-title beautyShop-primary-color-text" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">@item.Title</a></h4>
+                                            <div class="news-text-item">
+                                                <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                                <div class="news-post-body">
+                                                    <p>@item.ShortDescription</p>
+                                                </div>
+                                            </div>
+                                            <a class="blog-link" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+                                            <ul class="blog-news-social pl-0">
+                                                <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                                <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                                <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,78 @@
+@model int
+<div id="addWishlistModal_@Model" title="@T("Wishlist.AddNewWishlist")" style="display:none;">
+    <div class="wishlist-modal-content">
+        <div class="add-wishlist-content">
+            <input type="text" id="wishlistName_@Model" class="wishlist-name-input" placeholder="@T("Wishlist.EnterWishlistName")" />
+            <button type="button" class="button-1 wishlist-modal-button wishlist-modal-button-submit" onclick="addWishlist(@Model)">@T("Common.OK")</button>
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    (function() {
+        var productId = @Model;
+        var dialogSelector = '#addWishlistModal_' + productId;
+        var inputSelector = '#wishlistName_' + productId;
+
+        $(function() {
+            if (!$(dialogSelector).data('ui-dialog')) {
+                $(dialogSelector).dialog({
+                    autoOpen: false,
+                    modal: true,
+                    width: 400,
+                    closeOnEscape: true,
+                    close: function() {
+                        $(inputSelector).val('');
+                    }
+                });
+            }
+        });
+
+        window['showAddWishlistModal_' + productId] = function() {
+            $(dialogSelector).dialog('open');
+        };
+
+        window['closeAddWishlistModal_' + productId] = function() {
+            if ($(dialogSelector).hasClass('ui-dialog-content')) {
+                $(dialogSelector).dialog('close');
+            }
+        };
+
+        window['addWishlist_' + productId] = function() {
+            var wishlistName = $(inputSelector).val().trim();
+
+            if (!wishlistName) {
+                alert('@T("Wishlist.NameRequired")');
+                $(inputSelector).focus();
+                return;
+            }
+
+            window['closeAddWishlistModal_' + productId]();
+
+            AjaxCart.createCustomWishlist(
+                '@Url.RouteUrl(NopRouteNames.Ajax.ADD_WISHLIST)',
+                wishlistName,
+                productId
+            );
+        };
+    })();
+
+    function showAddWishlistModal(productId) {
+        if (window['showAddWishlistModal_' + productId]) {
+            window['showAddWishlistModal_' + productId]();
+        }
+    }
+
+    function closeAddWishlistModal(productId) {
+        if (window['closeAddWishlistModal_' + productId]) {
+            window['closeAddWishlistModal_' + productId]();
+        }
+    }
+
+    function addWishlist(productId) {
+        if (window['addWishlist_' + productId]) {
+            window['addWishlist_' + productId]();
+        }
+    }
+</script>
+

@@ -1,0 +1,95 @@
+@model FooterModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Domain.Topics
+@using Nop.Core.Domain.Blogs
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Forums
+@using Nop.Core.Domain.News
+@using Nop.Core.Domain.Customers
+@using Nop.Core.Domain.Vendors
+
+@inject IWorkContext workContext
+@inject IStoreContext storeContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject BlogSettings blogSettings
+@inject CatalogSettings catalogSettings
+@inject ForumSettings forumSettings
+@inject NewsSettings newsSettings
+@inject VendorSettings vendorSettings
+@inject CustomerSettings customerSettings
+@inject Nop.Core.Domain.Common.CommonSettings commonSettings
+@inject Nop.Core.Domain.Orders.ShoppingCartSettings shoppingCartSettings
+
+@{
+    var store = await storeContext.GetCurrentStoreAsync();
+    var hideDesignedByNopStation = await settingService.GetSettingByKeyAsync<bool>("RoseaSettings.HideDesignedByNopStationAtFooter", storeId: store.Id, loadSharedValueIfNotFound: true);
+
+}
+<div class="footer">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = "footer_before" })
+    @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "AdvantageBlock" })
+    <div class="footer-upper">
+        <div class="section-container">
+            <div class="section-row">
+                @await Component.InvokeAsync(typeof(FooterMenuViewComponent))
+                <div class="footer-block newsletter-block">
+                    <div class="title">
+                        <strong>@T("Newsletter.Title")</strong>
+                    </div>
+                    <div class="newsletter list">
+                        @await Component.InvokeAsync(typeof(LogoViewComponent))
+                        @await Component.InvokeAsync(typeof(NewsLetterBoxViewComponent))
+                    </div>
+                    @await Component.InvokeAsync(typeof(StoreThemeSelectorViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-lower">
+        <div class="section-container">
+            <div class=" section-row">
+                <div class="footer-info">
+                    <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+                    @if (Model.DisplayTaxShippingInfoFooter)
+                    {
+                        var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                        <span class="footer-tax-shipping">
+                            @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
+                        </span>
+                    }
+                </div>
+                @if (!Model.HidePoweredByNopCommerce)
+                {
+                    <div class="footer-powered-by">
+                        @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                            Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
+                        Powered by <a href="https://www.nopcommerce.com/">nopCommerce</a>
+                    </div>
+                }
+                <div class="follow-us">
+                    <div class="social">
+                        @await Component.InvokeAsync(typeof(SocialButtonsViewComponent))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="powered-by">
+        @if (!hideDesignedByNopStation)
+        {
+            <div class="footer-powered-by">
+                <div>
+                    Designed By <a href="https://www.nop-station.com" target="_blank"> <img class="nopstation-logo" alt="Designed by nopStation : Your Trusted #1 nopcommerce development Company" title="Designed by nopStation" src="/Themes/Rosea/Content/images/designed-by-nopstation.png" width="98" height="22"></a>
+                </div>
+                <div class="seo-text">Your Trusted #1 <a href="https://www.nop-station.com" target="_blank">nopcommerce development Company</a> </div>
+            </div>
+
+        }
+
+    </div>
+    <nop-antiforgery-token />
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
+</div>
+

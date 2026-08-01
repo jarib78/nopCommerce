@@ -1,0 +1,43 @@
+/* 2 of 23 CSS properties converted by rtl.daskhat.ir 
+ These properties should be override originals. 
+ just load rtl css file after original css file.*/
+
+/* body {direction:rtl;} */
+
+.category-middle .category-item {
+  position: relative;
+}
+
+  .category-middle .category-item .slider-content {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    height: auto;
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  .category-middle .category-item:hover .slider-content {
+    opacity: 1;
+  }
+
+.category-middle .slider-content .slider-title {
+  font-size: 18px;
+  text-transform: capitalize;
+  font-weight: bold;
+  margin-bottom: 8px;
+  max-width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-middle .slider-content .slider-subtitle {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

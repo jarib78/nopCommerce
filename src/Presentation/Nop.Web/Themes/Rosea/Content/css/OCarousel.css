@@ -1,0 +1,101 @@
+/*owl carousel custom css*/
+.owl-carousel .owl-stage-outer{
+  
+}
+.owl-carousel .owl-stage {
+  margin: auto;
+}
+.owl-carousel .owl-nav {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: #989696;
+}
+
+.owl-carousel .owl-prev {
+  margin-right: 8px;
+  position: relative;
+}
+
+.owl-carousel .owl-next {
+  margin-right: 8px;
+  position: relative;
+}
+.carousel-container .title {
+  font-size: 30px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* custom carousel style */
+  .owl-carousel .owl-nav button.owl-next:hover,
+  .owl-carousel .owl-nav button.owl-prev:hover {
+    color: var(--primary-color);
+  }
+.product-carousel .owl-nav,
+.manufactures-carousel .owl-nav{
+  position: absolute;
+  right: 25px;
+}
+.category-slider .owl-carousel{
+  margin-bottom: 35px;
+}
+.manufactures-carousel .single-item{
+  border: 1px solid #eee;
+  margin-bottom: 35px;
+}
+.category-slider {
+  margin-bottom: 35px;
+}
+.home-category-slider.carousel-container {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+.carousel-container {
+  padding: 35px 70px;
+}
+
+@media (max-width: 575px) {
+  .product-carousel .owl-nav, .manufactures-carousel .owl-nav {
+    right: 32%;
+  }
+  .owl-carousel .owl-nav {
+    font-size: 16px;
+    right: unset;
+    position: unset;
+    display: contents;
+  }
+
+  .carousel-container {
+    padding: 20px;
+  }
+
+    .carousel-container .title {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .carousel-container {
+    padding: 20px 40px;
+  }
+
+    .carousel-container .title {
+      font-size: 22px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .carousel-container {
+    padding: 20px 40px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
+}

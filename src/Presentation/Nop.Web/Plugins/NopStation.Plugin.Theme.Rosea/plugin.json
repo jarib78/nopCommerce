@@ -1,0 +1,16 @@
+{
+  "Group": "Nop Station",
+  "FriendlyName": "Nop-Station Rosea Theme",
+  "SystemName": "NopStation.Plugin.Theme.Rosea",
+  "Version": "4.90.1.0",
+  "SupportedVersions": [
+    "4.90"
+  ],
+  "Author": "Nop-Station Team",
+  "DisplayOrder": 1,
+  "FileName": "NopStation.Plugin.Theme.Rosea.dll",
+  "Description": "This plugin allows to configure NopStation Rosea theme.",
+  "DependsOnSystemNames": [
+    "NopStation.Core"
+  ]
+}

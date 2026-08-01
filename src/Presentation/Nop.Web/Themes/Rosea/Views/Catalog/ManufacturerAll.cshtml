@@ -1,0 +1,73 @@
+@model IList<ManufacturerModel>
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure
+@using Nop.Core
+@{
+
+    var rtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+}
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-manufacturer-list-page");
+}
+@section breadcrumb{
+    <div class="page-title">
+        <h1>@T("Manufacturers.List")</h1>
+    </div>
+}
+<div class="page manufacturer-list-page">
+    
+    <div class="page-body">
+        <div class="manufacturer-grid sub-category-grid">
+            <div class="item-grid owl-carousel sub-category-carousel">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="manufacturer-item">
+                            <h2 class="title">
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<Manufacturer>( new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                            <div class="picture">
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<Manufacturer>( new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+
+       $('.sub-category-carousel').owlCarousel({
+        nav: true,
+        dots: false,
+        loop: true,
+        margin: 10,
+        navText: ["@T("NopStation.Theme.Rosea.OCarousel.Nav.Prev")", "@T("NopStation.Theme.Rosea.OCarousel.Nav.Next")"],
+        autoplayTimeout: 4000,
+           autoplayHoverPause: true,
+        rtl: @rtl.ToString().ToLower(),
+        responsive: {
+          0: {
+            items: 1
+          },
+          576: {
+            items: 2
+          },
+          768: {
+            items: 3
+          }
+        }
+      });
+    })
+</script>

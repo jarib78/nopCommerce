@@ -1,0 +1,237 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_AdminLayout";
+    NopHtml.SetActiveMenuItemSystemName("Rosea.Configuration");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, "/lib_npm/farbstastic/farbtastic.min.js");
+    NopHtml.AddCssFileParts("/lib_npm/farbstastic/farbtastic.css", string.Empty);
+    ViewBag.PageTitle = T("Admin.NopStation.Theme.Rosea.Configuration").Text;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.EnableOfferZone)").change(toggleEnablePWA);
+        toggleEnablePWA();
+        $("#@Html.IdFor(model => model.EnableAdvantageZone)").change(toggleEnablePWAAdvantage);
+        toggleEnablePWAAdvantage();
+    });
+
+    function toggleEnablePWA() {
+        if ($('#@Html.IdFor(model => model.EnableOfferZone)').is(':checked')) {
+            $('#pnlOfferZoneEnabled').show();
+        } else {
+            $('#pnlOfferZoneEnabled').hide();
+        }
+    }
+
+    function toggleEnablePWAAdvantage() {
+        if ($('#@Html.IdFor(model => model.EnableAdvantageZone)').is(':checked')) {
+            $('#pnlAdvantageZoneEnabled').show();
+        } else {
+            $('#pnlAdvantageZoneEnabled').hide();
+        }
+    }
+</script>
+
+<form asp-controller="Rosea" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.NopStation.Theme.Rosea.Configuration")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PrimaryThemeColor_OverrideForStore" asp-input="PrimaryThemeColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PrimaryThemeColor" />
+                                </div>
+                                <div class="col-sm-8">
+                                    <nop-editor asp-for="PrimaryThemeColor" readonly />
+                                    <div id="color-picker"></div>
+                                    <script>
+                                        $(document).ready(function(){
+                                            $('#color-picker').farbtastic('#@Html.IdFor(model => model.PrimaryThemeColor)');
+                                        });
+                                    </script>
+                                    <span asp-validation-for="PrimaryThemeColor"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="FooterEmail_OverrideForStore" asp-input="FooterEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="FooterEmail" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="FooterEmail" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="EnableImageLazyLoad_OverrideForStore" asp-input="EnableImageLazyLoad" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="EnableImageLazyLoad" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="EnableImageLazyLoad" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="EnableOfferZone_OverrideForStore" asp-input="EnableOfferZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="EnableOfferZone" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="EnableOfferZone" />
+                                </div>
+                            </div>
+                            <nop-nested-setting asp-for="EnableOfferZone">
+                                <div id="pnlOfferZoneEnabled">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferWidgetZoneId_OverrideForStore" asp-input="OfferWidgetZoneId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferWidgetZoneId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="OfferWidgetZoneId" asp-items="@Model.AvailableWidgetZones" asp-required="true" />
+                                            <span asp-validation-for="OfferWidgetZoneId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZonePicture01_OverrideForStore" asp-input="OfferZonePicture01" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZonePicture01" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZonePicture01" />
+                                            <span asp-validation-for="OfferZonePicture01"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZoneRedirectionUrl01_OverrideForStore" asp-input="OfferZoneRedirectionUrl01" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZoneRedirectionUrl01" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZoneRedirectionUrl01" />
+                                            <span asp-validation-for="OfferZoneRedirectionUrl01"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZonePicture02_OverrideForStore" asp-input="OfferZonePicture02" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+
+                                            <nop-label asp-for="OfferZonePicture02" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZonePicture02" />
+                                            <span asp-validation-for="OfferZonePicture02"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZoneRedirectionUrl02_OverrideForStore" asp-input="OfferZoneRedirectionUrl02" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZoneRedirectionUrl02" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZoneRedirectionUrl02" />
+                                            <span asp-validation-for="OfferZoneRedirectionUrl02"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZonePicture03_OverrideForStore" asp-input="OfferZonePicture03" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZonePicture03" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZonePicture03" />
+                                            <span asp-validation-for="OfferZonePicture03"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZoneRedirectionUrl03_OverrideForStore" asp-input="OfferZoneRedirectionUrl03" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZoneRedirectionUrl03" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZoneRedirectionUrl03" />
+                                            <span asp-validation-for="OfferZoneRedirectionUrl03"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZonePicture04_OverrideForStore" asp-input="OfferZonePicture04" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZonePicture04" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZonePicture04" />
+                                            <span asp-validation-for="OfferZonePicture04"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="OfferZoneRedirectionUrl04_OverrideForStore" asp-input="OfferZoneRedirectionUrl04" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="OfferZoneRedirectionUrl04" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="OfferZoneRedirectionUrl04" />
+                                            <span asp-validation-for="OfferZoneRedirectionUrl04"></span>
+                                        </div>
+                                    </div>
+                                    <div class="picture-container" style="background-color: aliceblue; border: grey; border-style: solid; border-width: 1px; text-align: center; padding-top: 20px; padding-bottom: 20px;">
+                                        <img src="~/Plugins/NopStation.Plugin.Theme.Rosea/Content/Images/offer-zone-demo.jpg" alt="Offer zone demonstration" style="width: 850px; height: 250px;" />
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="EnableAdvantageZone_OverrideForStore" asp-input="EnableAdvantageZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="EnableAdvantageZone" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="EnableAdvantageZone" />
+                                </div>
+                            </div>
+                            <nop-nested-setting asp-for="EnableAdvantageZone">
+                                <div id="pnlAdvantageZoneEnabled">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="AdvantageWidgetZoneId_OverrideForStore" asp-input="AdvantageWidgetZoneId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="AdvantageWidgetZoneId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="AdvantageWidgetZoneId" asp-items="@Model.AvailableWidgetZones" asp-required="true" />
+                                            <span asp-validation-for="AdvantageWidgetZoneId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="AdvantageZoneInfo_OverrideForStore" asp-input="AdvantageZoneInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="AdvantageZoneInfo" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="AdvantageZoneInfo" />
+                                            <span asp-validation-for="AdvantageZoneInfo"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

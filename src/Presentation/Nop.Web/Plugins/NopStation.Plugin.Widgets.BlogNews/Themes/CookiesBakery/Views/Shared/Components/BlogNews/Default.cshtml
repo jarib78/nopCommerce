@@ -1,0 +1,123 @@
+﻿@model PublicModel
+@inject Nop.Core.IWebHelper webHelper
+@inject Nop.Core.IWorkContext workContext
+
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts("/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/CookiesBakery/Contents/css/styles.rtl.css",string.Empty);
+    }
+    else
+    {
+        NopHtml.AppendCssFileParts("/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/CookiesBakery/Contents/css/styles.css",string.Empty);
+    }
+}
+
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area">
+        @if (Model.BlogPosts.Any())
+        {
+            <div class="container latest-blog-container py-4">
+                <div class="custom-container-fluid">
+                    <div class="title-container mb-0">
+                        <div class="d-flex justify-content-center align-items-center title">
+                            <i class="icon-leaf-left"></i>
+                            <h2>@T("NopStation.BlogNews.Home.LatestBlog")</h2>
+                            <i class="icon-leaf-right"></i>
+                        </div>
+                        <div class="subtitle">
+                            <a href="@Url.RouteUrl("Blog")">@T("NopStation.BlogNews.Home.ViewAll.Posts")</a>
+                        </div>
+                    </div>
+                    <div class="row blog-items pb-3  justify-content-center">
+                        @foreach (var item in Model.BlogPosts)
+                        {
+                            <div class="col-sm-6 col-lg-3 blog-item">
+                                <div class="single-blog bg-white">
+                                    <div>
+                                        <a class="d-block post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                            <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                        </a>
+                                    </div>
+
+                                    <div class="py-3">
+                                        <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                        <h4 class="text-ellipsis"><a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h4>
+                                    </div>
+
+                                    <div class="d-none post-body">
+                                        <p>@item.BodyOverview</p>
+                                    </div>
+                                    <a class="d-none blog-link" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestBlog.ReadMore")</a>
+                                    <ul class="d-none blog-news-social pl-0">
+                                        <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                        <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                        <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.NewsItems.Any())
+        {
+            <div class="container latest-news-container">
+                <div class="title-container mb-0 pt-0">
+                    <div class="d-flex justify-content-center align-items-center title">
+                        <i class="icon-leaf-left"></i>
+                        <h2>@T("NopStation.BlogNews.Home.LatestNews")</h2>
+                        <i class="icon-leaf-right"></i>
+                    </div>
+                    <div class="subtitle">
+                        <a href="@Url.RouteUrl("NewsArchive")">@T("NopStation.BlogNews.Home.ViewAll.News")</a>
+                    </div>
+                </div>
+                <div class="single-news pb-5">
+                    <div class="row news-items  justify-content-center">
+                        @foreach (var item in Model.NewsItems)
+                        {
+                            <div class="col-lg-4 news-item">
+                                <div class="news-box-inner py-3">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="d-inline-flex picture">
+                                                <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 p-0">
+                                            <div class="d-flex flex-column justify-content-between mt-3 mt-sm-0 news-box-info">
+                                                <h4 class="text-ellipsis">
+                                                    <a class="post-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a>
+                                                </h4>
+                                                <div class="my-4">
+                                                    <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                                    <div class="post-body">
+                                                        <p>@item.ShortDescription</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <a class="blog-link" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+                                                    <ul class="d-none blog-news-social pl-0">
+                                                        <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                                        <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                                        <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

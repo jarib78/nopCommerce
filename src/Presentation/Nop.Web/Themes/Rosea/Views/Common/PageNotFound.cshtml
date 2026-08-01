@@ -1,0 +1,35 @@
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.PageNotFound").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-not-found-page");
+}
+@section Breadcrumb
+    {
+    <div class="page-title">
+        <div class="breadcrumb">
+            <div class="section-container">
+                <h1>@T("PageTitle.PageNotFound")</h1>
+            </div>
+            <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                <li>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                    <span class="delimiter">/</span>
+                </li>
+                <li>
+                    <strong class="current-item" itemprop="name">  @T("PageTitle.PageNotFound") </strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsAfterBreadcrumb, additionalData = Model })
+}
+    <div class="section-container">
+        <div class="page not-found-page">
+            <div class="page-body">
+                @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "PageNotFound" })
+            </div>
+        </div>
+    </div>

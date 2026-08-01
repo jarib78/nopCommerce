@@ -1,0 +1,55 @@
+/* rtl */
+@font-face {
+    font-family: 'Gotham';
+    src: url('../fonts/Gotham-Light.woff2') format('woff2'),
+      url('../fonts/Gotham-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Gotham-Medium';
+    src: url('../fonts/Gotham-Medium.woff2') format('woff2'),
+      url('../fonts/Gotham-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?tggnvy');
+    src: url('../fonts/icomoon.eot?tggnvy#iefix') format('embedded-opentype'),
+      url('../fonts/icomoon.ttf?tggnvy') format('truetype'),
+      url('../fonts/icomoon.woff?tggnvy') format('woff'),
+      url('../fonts/icomoon.svg?tggnvy#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+/* owl carousel */
+
+.owl-prev::before {
+  left: auto;
+  right: -25px;
+  transform: rotateY(-180deg);
+}
+
+.owl-next::after {
+  right: auto;
+  left: -25px;
+  transform: rotateY(0deg);
+}
+/* custom checkbox */
+input[type="checkbox"]~span:after {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+.shopping-cart-page input[type="checkbox"]~span,
+.wishlist-page input[type="checkbox"]~span {
+  bottom: 20px;
+}
+
+.wishlist-content .add-to-cart span.custom-checkbox {
+  top: 43%;
+}
+

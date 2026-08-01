@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+<div class="master-wrapper-page">
+    <div id="global-header">
+        @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
+        @await Html.PartialAsync("_Header")
+        <div class="header-menu">
+            @await Component.InvokeAsync(typeof(LanguageSelectorViewComponent))
+            @await Component.InvokeAsync(typeof(MainMenuViewComponent))
+            @await Component.InvokeAsync(typeof(CurrencySelectorViewComponent))
+        </div>
+    </div>
+    <main class="master-wrapper-content" id="main">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })
+
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        <div class="master-column-wrapper">
+            @RenderBody()
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentAfter })
+    </main>
+    @await Component.InvokeAsync(typeof(FooterViewComponent))
+    <a href="#" class="scrollup">
+        <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </a>
+</div>
+@await Component.InvokeAsync(typeof(EuCookieLawViewComponent))
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var header_height = $('#global-header').outerHeight();
+        $('.master-wrapper-content').css({ "margin-top": header_height + "px" });
+    })
+</script>
