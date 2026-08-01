@@ -1,0 +1,100 @@
+﻿@model SendPrivateMessageModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.SendPM").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-send-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text">
+                    @T("PrivateMessages.Send.PostMessage")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
+                                <span>@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span>@T("PrivateMessages.Send.PostMessage")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+<form asp-route="@NopRouteNames.Standard.SEND_PM" method="post">
+    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    <div class="page private-messages private-message-send-page">
+        <div class="page-title">
+            <h1>@T("PrivateMessages.Send.PostMessage")</h1>
+        </div>
+        <div class="page-body">
+            <input type="hidden" asp-for="ToCustomerId" />
+            <input type="hidden" asp-for="ReplyToMessageId" />
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label>@T("PrivateMessages.Send.To")</label>
+                        @if (Model.AllowViewingToProfile)
+                        {
+                            <a href="@Url.RouteUrl("CustomerProfile", new {id = Model.ToCustomerId})">@(Model.CustomerToName)</a>
+                        }
+                        else
+                        {
+                            <span>@Model.CustomerToName</span>
+                        }
+                    </div>
+                    <div class="inputs">
+                        <label>@T("PrivateMessages.Send.Subject")</label>
+                        <input asp-for="Subject" class="pm-title-text" />
+                        <span asp-validation-for="Subject"></span>
+                    </div>
+                    <div class="inputs message">
+                        <label>@T("PrivateMessages.Send.Message")</label>
+                        <nop-bb-code-editor asp-for="Message" />
+                        <textarea asp-for="Message" class="bb-editor-text"></textarea>
+                        <span asp-validation-for="Message"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="button-1 send-pm-button beautyShop-primary-color-bg">@T("PrivateMessages.Send.SendButton")</button>
+                <button type="button" class="button-2 cancel-pm-button beautyShop-primary-color-bg" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.Send.CancelButton")</button>
+            </div>
+        </div>
+    </div>
+</form>

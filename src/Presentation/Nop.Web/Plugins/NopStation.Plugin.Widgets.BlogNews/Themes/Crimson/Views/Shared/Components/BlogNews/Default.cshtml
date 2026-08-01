@@ -1,0 +1,71 @@
+﻿@model PublicModel
+@inject Nop.Core.IWebHelper webHelper
+
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area custom-container-fluid">
+        <div class="row">
+            @if (Model.BlogPosts.Any())
+            {
+                <div class="col-lg-6">
+                    <h2 class="blog-news-header"> Latest Blog  </h2>
+                    <div class="row pb-3 pb-md-4 pb-lg-0">
+                        @foreach (var item in Model.BlogPosts)
+                        {
+                            <div class="col-sm-6 mb-3">
+                                <div class="single-blog">
+                                    <div>
+                                        <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                    </div>
+                                    <h4 class="text-ellipsis"><a class="post-title" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">@item.Title</a></h4>
+                                    <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                    <div class="post-body">
+                                        <p> @Html.Raw(@item.BodyOverview)</p>
+                                    </div>
+                                    <a class="blog-link" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">Read More</a>
+                                    <ul class="blog-news-social pl-0">
+                                        <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title" title="Facebook"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                        @*<li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title" title="Twitter"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>*@
+                                        <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title" title="Twitter"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                        <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)" title="Google Plus"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.NewsItems.Any())
+            {
+                <div class="col-lg-6">
+                    <h2 class="blog-news-header"> Latest News </h2>
+                    @foreach (var item in Model.NewsItems)
+                    {
+                        <div class="single-news mb-3">
+                            <div class="row flex-column flex-sm-row">
+                                <div class="col-12 col-sm-5">
+                                    <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                </div>
+                                <div class="col-12 col-sm-7">
+                                    <h4 class="text-ellipsis"><a class="post-title" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">@item.Title</a></h4>
+                                    <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                    <div class="post-body">
+                                        <p> @Html.Raw(@item.ShortDescription)</p>
+                                    </div>
+                                    <a class="blog-link" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">Read More</a>
+                                    <ul class="blog-news-social pl-0">
+                                        <li> <a href="https://www.facebook.com/sharer/sharer.php?u=@webHelper.GetThisPageUrl(true)&t=@item.Title" title="Facebook"> <i class="fa fa-facebook" aria-hidden="true"></i> </a> </li>
+                                        <li> <a href="https://twitter.com/share?url=@webHelper.GetThisPageUrl(true)&via=TWITTER_HANDLE&text=@item.Title" title="Twitter"> <i class="fa fa-twitter" aria-hidden="true"></i> </a> </li>
+                                        <li> <a href="https://plus.google.com/share?url=@webHelper.GetThisPageUrl(true)" title="Google Plus"> <i class="fa fa-google-plus" aria-hidden="true"></i> </a> </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

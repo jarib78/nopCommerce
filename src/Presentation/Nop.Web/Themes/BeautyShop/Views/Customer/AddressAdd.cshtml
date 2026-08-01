@@ -1,0 +1,88 @@
+﻿@model CustomerAddressEditModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    //page class
+    NopHtml.AppendPageCssClassParts("html-address-edit-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text">
+                    @T("Account.MyAccount")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl("Homepage")">
+                                <span>@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="/customer/addresses">
+                                <span>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span>@T("Account.CustomerAddresses.AddNew")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+<form asp-route="@NopRouteNames.Standard.CUSTOMER_ADDRESS_ADD" method="post">
+    <div class="page account-page address-edit-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses.AddNew")</h1>
+        </div>
+        <div class="page-body">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            @{
+                var dataDictAddress = new ViewDataDictionary(ViewData);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+            }
+            <div class="buttons">
+                <button type="submit" class="button-1 save-address-button">@T("Common.Save")</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,148 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableImageLazyLoad_OverrideForStore" asp-input="EnableImageLazyLoad" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableImageLazyLoad" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableImageLazyLoad" />
+            <span asp-validation-for="EnableImageLazyLoad"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlLazyLoadPictureId">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="LazyLoadPictureId_OverrideForStore" asp-input="LazyLoadPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="LazyLoadPictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LazyLoadPictureId" />
+            <span asp-validation-for="LazyLoadPictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowSupportedCardsPictureAtPageFooter_OverrideForStore" asp-input="ShowSupportedCardsPictureAtPageFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowSupportedCardsPictureAtPageFooter" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowSupportedCardsPictureAtPageFooter" />
+            <span asp-validation-for="ShowSupportedCardsPictureAtPageFooter"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlSupportedCardsPictureId">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SupportedCardsPictureId_OverrideForStore" asp-input="SupportedCardsPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SupportedCardsPictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SupportedCardsPictureId" />
+            <span asp-validation-for="SupportedCardsPictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowLogoAtPageFooter_OverrideForStore" asp-input="ShowLogoAtPageFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowLogoAtPageFooter" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowLogoAtPageFooter" />
+            <span asp-validation-for="ShowLogoAtPageFooter"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlFooterLogoPictureId">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="FooterLogoPictureId_OverrideForStore" asp-input="FooterLogoPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="FooterLogoPictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="FooterLogoPictureId" />
+            <span asp-validation-for="FooterLogoPictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowNewsLetterBackgroundPicture_OverrideForStore" asp-input="ShowNewsLetterBackgroundPicture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowNewsLetterBackgroundPicture" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowNewsLetterBackgroundPicture" />
+            <span asp-validation-for="ShowNewsLetterBackgroundPicture"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlNewsLetterBackgroundId">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewsLetterBackgroundPictureId_OverrideForStore" asp-input="NewsLetterBackgroundPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewsLetterBackgroundPictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewsLetterBackgroundPictureId" />
+            <span asp-validation-for="NewsLetterBackgroundPictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowBreadcrumbPicture_OverrideForStore" asp-input="ShowBreadcrumbPicture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowBreadcrumbPicture" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowBreadcrumbPicture" />
+            <span asp-validation-for="ShowBreadcrumbPicture"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlBreadcrumbPictureId">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BreadcrumbPictureId_OverrideForStore" asp-input="BreadcrumbPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BreadcrumbPictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BreadcrumbPictureId" />
+            <span asp-validation-for="BreadcrumbPictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Email_OverrideForStore" asp-input="Email" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Email" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Email" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PhoneNumber_OverrideForStore" asp-input="PhoneNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PhoneNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PhoneNumber" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="InstagramLink_OverrideForStore" asp-input="InstagramLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="InstagramLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="InstagramLink" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomCss_OverrideForStore" asp-input="CustomCss" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomCss" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomCss" rows="10"></nop-textarea>
+        </div>
+    </div>
+</div>

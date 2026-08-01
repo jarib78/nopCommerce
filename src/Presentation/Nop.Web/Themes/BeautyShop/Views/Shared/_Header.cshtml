@@ -1,0 +1,36 @@
+﻿<div class="header beautyShop-header-font-color beautyShop-header-color">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderBefore })
+    <div class="header-upper">
+        <div class="welcome-text">
+            @T("NopStation.Theme.BeautyShop.welcome.text")
+        </div>
+        @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
+        <div class="header-selectors-wrapper">
+
+            @await Component.InvokeAsync(typeof(TaxTypeSelectorViewComponent))
+            @await Component.InvokeAsync(typeof(CurrencySelectorViewComponent))
+            @await Component.InvokeAsync(typeof(LanguageSelectorViewComponent))
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderSelectors })
+        </div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMiddle })
+    <div class="header-lower">
+        <div class="header-logo">
+            @await Component.InvokeAsync(typeof(LogoViewComponent))
+            <i class="icon icon-navigation"></i>
+        </div>
+
+        <div class="header-menu beautyShop-header-font-color">
+            @await Component.InvokeAsync(typeof(MainMenuViewComponent))
+        </div>
+
+        <div class="header-links-wrapper">
+            @await Component.InvokeAsync(typeof(HeaderLinksViewComponent))
+            @await Component.InvokeAsync(typeof(FlyoutShoppingCartViewComponent))
+        </div>
+        @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
+        <div class="header-mobile-search" style="display:none;"></div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>
+

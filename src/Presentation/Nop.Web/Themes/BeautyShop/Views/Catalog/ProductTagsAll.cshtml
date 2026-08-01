@@ -1,0 +1,69 @@
+﻿@model PopularProductTagsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AllProductTags").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-product-tags-all-page");
+}
+<div class="page product-tags-all-page">
+    <div class="page-title">
+        <h1>@T("Products.Tags.All")</h1>
+    </div>
+    <div class="page-body">
+        @{
+            var searchTerm = ViewContext.HttpContext.Request.Query["tag"].ToString();
+            var filteredTags = Model.Tags;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                filteredTags = filteredTags
+                    .Where(tag => tag.Name.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+            }
+        }
+
+        <div class="tag-search-panel">
+            <form asp-route="@NopRouteNames.General.PRODUCT_TAGS" method="get" class="tag-search-form">
+                <label for="tag-search-term">@T("Common.Search")</label>
+                <div class="tag-search-fields">
+                    <input type="text"
+                           id="tag-search-term"
+                           name="tag"
+                           value="@searchTerm"
+                           placeholder="@T("Search.SearchBox.Tooltip")"
+                           class="tag-search-input" />
+                    <button type="submit" class="button-2 tag-search-button beautyShop-primary-color-bg">
+                        @T("Common.Search")
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @if (filteredTags.Count > 0)
+        {
+            <ul class="product-tags-list">
+                @foreach (var item in filteredTags)
+                {
+                    <li>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<ProductTag>(new { SeName = item.SeName }))" class="producttag beautyShop-primary-color-hover" style="font-size:@(Model.GetFontSize(item))%;">
+                        @item.Name</a>
+                    </li>
+                }
+            </ul>
+        }
+        else if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            <div class="no-data">
+                @T("Catalog.Products.NoResult")
+            </div>
+        }
+        else if (Model.Tags.Count == 0)
+        {
+            <div class="no-data">
+                @T("Common.NoData")
+            </div>
+        }
+    </div>
+</div>

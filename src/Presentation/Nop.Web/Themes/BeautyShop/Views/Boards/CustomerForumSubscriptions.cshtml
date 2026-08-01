@@ -1,0 +1,154 @@
+﻿@model CustomerForumSubscriptionsModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-forum-subscriptions-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text">
+                    @T("Account.ForumSubscriptions")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl("Homepage")">
+                                <span>@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
+}
+<div class="page account-page forum-subscriptions-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerForumSubscriptionsTop, additionalData = Model })
+
+        @if (Model.ForumSubscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.ForumSubscriptions.Description")
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $('#selectall').on('click', function () {
+                        $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
+                    });
+
+                    $('.subscription-list .rowcheckbox').on('change', function (e) {
+                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
+                        $('#selectall').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    });
+                });
+            </script>
+            <form asp-route="CustomerForumSubscriptions" method="post">
+                <div class="subscription-list">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                            </colgroup>
+                            <thead class="beautyShop-primary-color-bg">
+                                <tr>
+                                    <th class="select-boxes">
+                                        <input type="checkbox" id="selectall" />
+                                    </th>
+                                    <th class="info">
+                                        @T("Account.ForumSubscriptions.InfoColumn")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < Model.ForumSubscriptions.Count; i++)
+                                {
+                                    var item = Model.ForumSubscriptions[i];
+                                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                        <td class="select-boxes">
+                                            <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" />
+                                        </td>
+                                        <td class="info">
+                                            @if (item.TopicSubscription)
+                                            {
+                                                @Html.RouteLink(item.Title, "TopicSlug", new { Id = item.ForumTopicId, slug = item.Slug }, new { @class = "beautyShop-primary-color-hover" })
+                                            }
+                                            else
+                                            {
+                                                @Html.RouteLink(item.Title, "ForumSlug", new { Id = item.ForumId, slug = item.Slug }, new { @class = "beautyShop-primary-color-hover" })
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @{
+                        var pager = await Html.PagerAsync(Model.PagerModel);
+                    }
+                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                    <div class="buttons">
+                        <button type="submit" class="button-1 delete-selected-fs-button beautyShop-primary-color-bg">@T("Account.ForumSubscriptions.DeleteSelected")</button>
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.ForumSubscriptions.NoSubscriptions")
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerForumSubscriptionsBottom, additionalData = Model })
+
+    </div>
+</div>

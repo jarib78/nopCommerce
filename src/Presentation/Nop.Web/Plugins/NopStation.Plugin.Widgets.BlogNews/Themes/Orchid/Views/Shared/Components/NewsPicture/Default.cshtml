@@ -1,0 +1,6 @@
+﻿@model NewsItemPictureModel
+
+@if (Model.HasPicture)
+{
+    <img class="img-fluid news-img" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" />
+}

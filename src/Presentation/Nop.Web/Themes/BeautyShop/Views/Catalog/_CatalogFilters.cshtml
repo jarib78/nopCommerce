@@ -1,0 +1,69 @@
+﻿@model CatalogProductsModel
+
+@if (!Model.PriceRangeFilter.Enabled &&
+!Model.SpecificationFilter.Enabled &&
+!Model.ManufacturerFilter.Enabled)
+{
+    return;
+}
+
+
+    @if (Model.PriceRangeFilter.Enabled)
+    {
+        <div class="block price-filters">
+            @await Html.PartialAsync("_FilterPriceBox", Model.PriceRangeFilter)
+        </div>
+    }
+
+    @if (Model.SpecificationFilter.Enabled)
+    {
+
+            @await Html.PartialAsync("_FilterSpecsBox", Model.SpecificationFilter)
+    }
+
+    @if (Model.ManufacturerFilter.Enabled)
+    {
+        <div class="block brand-filters">
+            @await Html.PartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter)
+        </div>
+    }
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var e = window, a = 'inner';
+        if (!('innerWidth' in window)) {
+            a = 'client';
+            e = document.documentElement || document.body;
+        }
+        var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+        if (result.width < 1201) {
+            $('.product-filters').addClass('product-filters-mini');
+            $('.fiters-flyout-title').css('display', 'inline');
+            $('.block.product-filters.product-filters-mini').appendTo('body');
+        }
+        else {
+            $('.product-filters').removeClass('product-filters-mini');
+            $('body > .block.product-filters').prependTo('.custom-column-two.side-1');
+            $('.fiters-flyout-title').css('display', 'none');
+        }
+
+        $(window).on("resize", function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1201) {
+                $('.product-filters').addClass('product-filters-mini');
+                $('.fiters-flyout-title').css('display', 'inline');
+                $('.custom-column-two.side-1 > .block.product-filters.product-filters-mini').appendTo('body');
+            }
+            else {
+                $('.product-filters').removeClass('product-filters-mini');
+                $('body > .block.product-filters').prependTo('.custom-column-two.side-1');
+                $('.fiters-flyout-title').css('display', 'none');
+            }
+        });
+    });
+</script>

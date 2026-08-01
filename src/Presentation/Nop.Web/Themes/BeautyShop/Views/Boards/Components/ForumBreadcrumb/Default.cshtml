@@ -1,0 +1,74 @@
+﻿@model ForumBreadcrumbModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Tax
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@{
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+
+
+<div class="breadcrumb-background" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+    <div class="breadcrumb-container">
+        <div class="breadcrumb-current-item">
+            <h4 class="beautyShop-primary-color-text beautyShop-breadcrumb-title">
+                @T("Forum")
+            </h4>
+        </div>
+        <div class="breadcrumb" style="padding:0 5px;">
+            <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                <li>
+                    <span>
+                        <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl("Homepage")" title="@T("Forum.Breadcrumb.HomeTitle")">@T("Forum.Home")</a>
+                    </span>
+                </li>
+                <li>
+                    <span class="delimiter">@breadcrumbDelimiter</span>
+                    @Html.RouteLink(T("Forum.Forums").Text, "Boards", null, new { title = T("Forum.Breadcrumb.ForumHomeTitle"), @class = "beautyShop-primary-color-hover" })
+                </li>
+                @if (Model.ForumGroupId > 0)
+                {
+                    <li>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                        @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
+                        new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
+                        new { title = $"{T("Forum.Breadcrumb.ForumGroupTitle")}: {Model.ForumGroupName} ", @class = "beautyShop-primary-color-hover" })
+                    </li>
+
+                }
+                @if (Model.ForumId > 0)
+                {
+                    <li>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                        @Html.RouteLink(Model.ForumName, "ForumSlug",
+                        new { id = Model.ForumId, slug = Model.ForumSeName },
+                        new { title = $"{T("Forum.Breadcrumb.ForumTitle")}: {Model.ForumName} ", @class = "beautyShop-primary-color-hover" }
+                       )
+                    </li>
+                }
+                @if (Model.ForumTopicId > 0)
+                {
+                    <li>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                        @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
+                        new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
+                        new { title = $"{T("Forum.Breadcrumb.TopicTitle")}: {Model.ForumTopicSubject} ", @class = "beautyShop-primary-color-hover" })
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

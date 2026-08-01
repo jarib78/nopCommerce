@@ -1,0 +1,197 @@
+.latest-blog-container,
+.latest-news-container {
+  margin-bottom: 50px;
+}
+
+  .latest-blog-container .title,
+  .latest-news-container .title {
+    text-align: center;
+    padding: 0;
+    margin: 0 0 30px;
+    font-size: 30px;
+    font-weight: 300;
+    color: #000000;
+    position: relative;
+  }
+
+  .latest-blog-container .post-body,
+  .latest-blog-container .blog-comment,
+  .latest-blog-container .blog-link {
+    display: none;
+  }
+
+  .latest-blog-container .blog-container,
+  .latest-news-container .news-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .latest-blog-container .blog,
+  .latest-news-container .news {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-bottom: 70px;
+  }
+
+  .latest-news-container .news {
+    margin-bottom: 20px;
+  }
+
+  .latest-blog-container .blog img {
+    width: 100%;
+  }
+
+  .latest-blog-container .blog .blog-title {
+    min-height: 70px;
+    padding: 5px 25px 5px;
+  }
+
+  .latest-blog-container .latest-blog-container-Title-homepage {
+    background-color: white;
+    min-width: 80%;
+    text-align: center;
+    font-size: 15px;
+    padding-top: 8px;
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+    .latest-blog-container .latest-blog-container-Title-homepage .date-time {
+      padding: 12px 0 3px;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      background-color: #FFA6A8;
+      height: 50px;
+      text-align: center;
+      min-height: 50px;
+    }
+
+  .latest-news-container .news-box-inner {
+    position: relative;
+    z-index: 5;
+    background-color: white;
+    text-align: left;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    background: #fff;
+  }
+
+  .latest-news-container .news-image-container,
+  .latest-news-container .news-text-container {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .latest-news-container .news-image {
+    display: inline-flex;
+    margin: 10px 10px 0 0;
+  }
+
+    .latest-news-container .news-image img {
+      max-width: 100%;
+      margin: 1px 0px 10px 10px;
+    }
+
+  .latest-news-container .news-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+
+  .latest-news-container .news-title {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffa6a8;
+    padding: 0;
+  }
+
+  .latest-news-container .news-text-item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .latest-news-container .date-time {
+    color: #A7AEBF;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .latest-news-container .blog-link {
+    color: #0A0636;
+    font-size: 15px;
+    text-decoration: underline;
+    text-transform: capitalize;
+  }
+/**Blog and News Section**/
+.blog-news-area {
+  width: 100%;
+}
+
+
+@media (min-width: 576px) {
+  .latest-blog-container .blog {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .latest-news-container .news-image-container {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+
+  .latest-news-container .news-text-container {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+  }
+}
+
+@media (min-width: 991px) {
+  .latest-blog-container .blog {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+
+  .latest-news-container .news {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .blog-news-area {
+    max-width: calc(100% - 80px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1469px) {
+  .blog-news-area {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 575px) {
+  .latest-news-container .news-box-inner {
+    text-align: center;
+  }
+}

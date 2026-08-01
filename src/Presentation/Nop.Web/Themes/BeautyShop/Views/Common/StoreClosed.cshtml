@@ -1,0 +1,63 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.StoreClosed").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-store-closed-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text">
+                    @T("StoreClosed")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
+                                <span>@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span>@T("StoreClosed")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+<div class="page store-closed-page">
+    <div class="page-title">
+        <h1>@T("StoreClosed")</h1>
+    </div>
+    <div class="page-body">
+        @T("StoreClosed.Hint")
+    </div>
+</div>

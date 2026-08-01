@@ -1,0 +1,135 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableThemeCustomization_OverrideForStore" asp-input="EnableThemeCustomization" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableThemeCustomization" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableThemeCustomization" />
+            <span asp-validation-for="EnableThemeCustomization"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlThemeCustomization">
+
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PrimaryThemeColor_OverrideForStore" asp-input="PrimaryThemeColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PrimaryThemeColor" />
+        </div>
+        <div class="col-sm-8">
+            <nop-editor asp-for="PrimaryThemeColor" readonly />
+            <div id="color-picker"></div>
+            <script>
+                $(document).ready(function(){
+                    $('#color-picker').farbtastic('#@Html.IdFor(model => model.PrimaryThemeColor)');
+                });
+            </script>
+            <span asp-validation-for="PrimaryThemeColor"></span>
+        </div>
+
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SecondaryThemeColor_OverrideForStore" asp-input="SecondaryThemeColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SecondaryThemeColor" />
+        </div>
+        <div class="col-sm-8">
+            <nop-editor asp-for="SecondaryThemeColor" readonly />
+            <div id="secondary-color-picker"></div>
+            <script>
+                $(document).ready(function(){
+                    $('#secondary-color-picker').farbtastic('#@Html.IdFor(model => model.SecondaryThemeColor)');
+                });
+            </script>
+            <span asp-validation-for="SecondaryThemeColor"></span>
+        </div>
+
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HeaderColor_OverrideForStore" asp-input="HeaderColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HeaderColor" />
+        </div>
+        <div class="col-sm-8">
+            <nop-editor asp-for="HeaderColor" readonly />
+            <div id="header-color-picker"></div>
+            <script>
+                $(document).ready(function(){
+                    $('#header-color-picker').farbtastic('#@Html.IdFor(model => model.HeaderColor)');
+                });
+            </script>
+            <span asp-validation-for="HeaderColor"></span>
+        </div>
+
+          <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HeaderFontColor_OverrideForStore" asp-input="HeaderFontColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HeaderFontColor" />
+        </div>
+        <div class="col-sm-8">
+            <nop-editor asp-for="HeaderFontColor" readonly />
+            <div id="header-font-color-picker"></div>
+            <script>
+                $(document).ready(function(){
+                    $('#header-font-color-picker').farbtastic('#@Html.IdFor(model => model.HeaderFontColor)');
+                });
+            </script>
+            <span asp-validation-for="HeaderFontColor"></span>
+        </div>
+
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ParagraphTextSize_OverrideForStore" asp-input="ParagraphTextSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ParagraphTextSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ParagraphTextSize" />
+        </div>
+
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BreadcrumbTitleSize_OverrideForStore" asp-input="BreadcrumbTitleSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BreadcrumbTitleSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BreadcrumbTitleSize" />
+        </div>
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BreadcrumbTextSize_OverrideForStore" asp-input="BreadcrumbTextSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BreadcrumbTextSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BreadcrumbTextSize" />
+        </div>
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BigTitleSize_OverrideForStore" asp-input="BigTitleSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BigTitleSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BigTitleSize" />
+        </div>
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MediumTitleSize_OverrideForStore" asp-input="MediumTitleSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MediumTitleSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MediumTitleSize" />
+        </div>
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SmallTitleSize_OverrideForStore" asp-input="SmallTitleSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SmallTitleSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SmallTitleSize" />
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <div class="label-wrapper">
+                <label class="col-form-label">@T("Admin.NopStation.Theme.BeautyShop.ResetToDefault.Label")</label>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <a asp-action="ResetToDefault" class="btn btn-danger">
+                <i class="fas fa-sync-alt"></i>
+                @T("Admin.NopStation.Theme.BeautyShop.ResetToDefault")
+            </a>
+        </div>
+    </div>
+</div>

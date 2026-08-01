@@ -1,0 +1,70 @@
+﻿@model ShoppingCartModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-shopping-cart-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text beautyShop-breadcrumb-title">
+                    @T("ShoppingCart")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
+                                <span class="beautyShop-breadcrumb-text">@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span class="beautyShop-breadcrumb-text">@T("ShoppingCart")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (!Model.OnePageCheckoutEnabled)
+{
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new { step = CheckoutProgressStep.Cart })
+}
+<div class="page shopping-cart-page">
+    <div class="page-title">
+        <h1>@T("ShoppingCart")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), new { overriddenModel = Model })
+    </div>
+</div>

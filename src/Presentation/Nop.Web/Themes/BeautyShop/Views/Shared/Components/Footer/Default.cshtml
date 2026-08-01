@@ -1,0 +1,333 @@
+﻿@model FooterModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Domain.Topics
+@using Nop.Core.Domain.Blogs
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Forums
+@using Nop.Core.Domain.News
+@using Nop.Core.Domain.Customers
+@using Nop.Core.Domain.Vendors
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Menus
+@using Nop.Web.Models.Menus
+@using Nop.Web.Factories
+
+@inject IWorkContext workContext
+@inject IStoreContext storeContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject BlogSettings blogSettings
+@inject CatalogSettings catalogSettings
+@inject ForumSettings forumSettings
+@inject NewsSettings newsSettings
+@inject VendorSettings vendorSettings
+@inject CustomerSettings customerSettings
+@inject IMenuModelFactory menuModelFactory
+@{
+
+    var store = await storeContext.GetCurrentStoreAsync();
+    var html = await settingService.GetSettingByKeyAsync<string>("BeautyShopSettings.FooterTopDescription", loadSharedValueIfNotFound: true, storeId: store.Id);
+    var footerLogoPictureId = await settingService.GetSettingByKeyAsync<int>("BeautyShopSettings.FooterLogoPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var footerLogoPictureUrl = await pictureService.GetPictureUrlAsync(footerLogoPictureId);
+    var newsletterPictureId = await settingService.GetSettingByKeyAsync<int>("BeautyShopSettings.NewsLetterBackgroundPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var newsletterPictureUrl = await pictureService.GetPictureUrlAsync(newsletterPictureId);
+    var footerEmail = await settingService.GetSettingByKeyAsync<string>("BeautyShopSettings.Email", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var showLogoAtPageFooter = await settingService.GetSettingByKeyAsync<bool>("BeautyShopSettings.ShowLogoAtPageFooter", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var activecolor = await settingService.GetSettingByKeyAsync<string>("BeautyShopSettings.PrimaryThemeColor", storeId: store.Id, loadSharedValueIfNotFound: true) ?? "#000";
+    var footerPhone = await settingService.GetSettingByKeyAsync<string>("BeautyShopSettings.PhoneNumber", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var showCardFooter = await settingService.GetSettingByKeyAsync<bool>("BeautyShopSettings.ShowSupportedCardsPictureAtPageFooter", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var supportedCardId = await settingService.GetSettingByKeyAsync<int>("BeautyShopSettings.SupportedCardsPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var supportedCardUrl = await pictureService.GetPictureUrlAsync(supportedCardId);
+    var footerMenus = await menuModelFactory.PrepareMenuModelsAsync(MenuType.Footer);
+    var hasFooterMenus = footerMenus?.Any(menu => menu.Items?.Any() ?? false) ?? false;
+    var hideDesignedByNopStation = await settingService.GetSettingByKeyAsync<bool>("BeautyShopSettings.HideDesignedByNopStationAtFooter", storeId: store.Id, loadSharedValueIfNotFound: true);
+}
+<style>
+    input[type="checkbox"]:checked ~ label::after,
+    .owl-nav button.owl-next::before,
+    .customer-addresses.active a {
+        color: @activecolor !important;
+    }
+
+    input[type="radio"]:checked + label:after,
+    .sitemap-page .entity li:before,
+    .current-page span,
+    button.owl-dot.active,
+    .swiper-pagination-bullet-active,
+    .product-tab-body.ui-tabs .ui-state-active a,
+    .product-tab-body.ui-tabs .ui-state-active a:link{
+        background: @activecolor !important;
+    }
+
+    .attributes .option-list input[type="checkbox"]:checked ~ label,
+    .attributes .option-list input[type="radio"]:checked ~ label {
+        color: @activecolor !important;
+        border-color: @activecolor !important;
+    }
+</style>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = "beautyShop_footer_top_description" })
+<div class="footer beautyShop-secondery-color-bg">
+    @{
+        var showNewsLetterBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowNewsLetterBackgroundPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+        if (showNewsLetterBackground)
+        {
+            <div class="footer-newsletter" style="background:#fff url('@newsletterPictureUrl') no-repeat center; background-size: cover;">
+                @await Component.InvokeAsync(typeof(NewsLetterBoxViewComponent))
+            </div>
+        }
+
+        else
+        {
+            <div class="footer-newsletter">
+                @await Component.InvokeAsync(typeof(NewsLetterBoxViewComponent))
+            </div>
+        }
+
+    }
+
+    <div class="footer-upper">
+        <div class="footer-block find-us">
+            <div class="title beautyShop-primary-color-text beautyShop-small-title">
+                <strong>@T("NopStation.Theme.BeautyShop.Footer.Findus")</strong>
+                <span><i class="icon-plus"></i></span>
+            </div>
+            <ul class="list">
+                <li><i class="icon-location beautyShop-primary-color-text"></i>   <span>@T("NopStation.Theme.BeautyShop.Footer.address")</span> </li>
+                <li>
+                    @{
+                        if (!String.IsNullOrEmpty(footerEmail))
+                        {
+                            <p><i class="icon-email beautyShop-primary-color-text"></i>  <span>@footerEmail</span> </p>
+                        }
+
+                        else
+                        {
+                            <p><i class="icon-email beautyShop-primary-color-text"></i>  @T("NopStation.Theme.BeautyShop.Footer.Email.Us"):  <span>@T("NopStation.Theme.BeautyShop.")</span></p>
+                        }
+
+                    }
+                </li>
+                <li>
+                    @{
+                        if (!String.IsNullOrEmpty(footerPhone))
+                        {
+                            <p><i class="icon-phone-call beautyShop-primary-color-text"></i> @T("NopStation.Theme.BeautyShop.Footer.CallUs1"): <span>@footerPhone</span></p>
+                        }
+
+                        else
+                        {
+                            <p> <i class="icon-phone-call beautyShop-primary-color-text"></i> @T("NopStation.Theme.BeautyShop.Footer.CallUs1"): <span>@T("NopStation.Theme.BeautyShop.Footer.PhoneNumber1")</span></p>
+                        }
+                    }
+                </li>
+            </ul>
+
+            @{
+                if (showCardFooter)
+                {
+                    <div class="footer-supported-card">
+                        <img  src="@supportedCardUrl"/>
+                    </div>
+
+                }
+
+            }
+            <div class="footer-follow-us">
+                <div class="social">
+                    <div class="title">
+                        <strong>@T("Footer.FollowUs")</strong>
+                    </div>
+                    @await Component.InvokeAsync(typeof(SocialButtonsViewComponent))
+                </div>
+
+            </div>
+        </div>
+        @if (hasFooterMenus)
+        {
+            foreach (var menu in footerMenus.Where(menu => menu.Items?.Any() ?? false))
+            {
+                <div class="footer-block footer-menu @menu.CssClass">
+                    <div class="title beautyShop-primary-color-text beautyShop-small-title">
+                        <strong>@menu.Name</strong>
+                        <span><i class="icon-plus"></i></span>
+                    </div>
+                    <ul class="list">
+                        @foreach (var menuItem in menu.Items)
+                        {
+                            @await Html.PartialAsync("Components/FooterMenu/_FooterItem", menuItem)
+                        }
+                    </ul>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="footer-block information">
+                <div class="title beautyShop-primary-color-text beautyShop-small-title">
+                    <strong>@T("Footer.Information")</strong>
+                    <span><i class="icon-plus"></i></span>
+                </div>
+                <ul class="list">
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.SITEMAP)">@T("Sitemap")</a></li>
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CONTACT_US)">@T("ContactUs")</a></li>
+                </ul>
+            </div>
+            <div class="footer-block customer-service">
+                <div class="title beautyShop-primary-color-text beautyShop-small-title">
+                    <strong>@T("Footer.CustomerService")</strong>
+                    <span><i class="icon-plus"></i></span>
+                </div>
+                <ul class="list">
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.SEARCH)">@T("Search")</a> </li>
+                    @if (newsSettings.Enabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.NEWS)">@T("News")</a></li>
+                    }
+                    @if (blogSettings.Enabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.BLOG)">@T("Blog")</a></li>
+                    }
+                    @if (forumSettings.ForumsEnabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.BOARDS)">@T("Forum.Forums")</a></li>
+                    }
+                    @if (catalogSettings.RecentlyViewedProductsEnabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.RECENTLY_VIEWED_PRODUCTS)">@T("Products.RecentlyViewedProducts")</a></li>
+                    }
+                    @if (catalogSettings.CompareProductsEnabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.COMPARE_PRODUCTS)">@T("Products.Compare.List")</a></li>
+                    }
+                    @if (catalogSettings.NewProductsEnabled)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.NEW_PRODUCTS)">@T("Products.NewProducts")</a></li>
+                    }
+                    @if (customerSettings.AllowCustomersToCheckGiftCardBalance)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CHECK_GIFT_CARD_BALANCE)">@T("CheckGiftCardBalance")</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="footer-block my-account">
+                <div class="title beautyShop-primary-color-text beautyShop-small-title">
+                    <strong>@T("Footer.MyAccount")</strong>
+                    <span><i class="icon-plus"></i></span>
+                </div>
+                <ul class="list">
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)">@T("Account.MyAccount")</a></li>
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ORDERS)">@T("Account.CustomerOrders")</a></li>
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ADDRESSES)">@T("Account.CustomerAddresses")</a></li>
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.CART)">@T("ShoppingCart")</a></li>
+                    <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.WISHLIST)">@T("Wishlist")</a></li>
+                    @if (vendorSettings.AllowCustomersToApplyForVendorAccount)
+                    {
+                        <li><a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.APPLY_VENDOR_ACCOUNT)">@T("Vendors.ApplyAccount")</a></li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+
+    <div class="footer-lower-border">
+        <div class="footer-lower">
+            <div class="footer-info">
+                <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, "")<span class="footer-disclaimer-storename beautyShop-primary-color-text">@Model.StoreName</span></span>
+                @if (Model.DisplayTaxShippingInfoFooter)
+                {
+                    var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                    <span class="footer-tax-shipping">
+                        @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
+                    </span>
+                }
+            </div>
+            @if (!Model.HidePoweredByNopCommerce)
+            {
+                <div class="footer-powered-by">
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
+                    Powered by <a href="@(OfficialSite.Main)">nopCommerce</a>
+                </div>
+            }
+
+            @if (!hideDesignedByNopStation)
+            {
+                <div class="footer-powered-by">
+                    Designed By<a href="https://www.nop-station.com" target="_blank"><img class="nopstation-logo" alt="Designed by nopStation : Your Trusted #1 nopCommerce Development Company" title="Designed by nopStation" src="/Themes/BeautyShop/Content/images/designed-by-nopStation.png" width="98" height="22"> </a>
+
+                    <div class="seo-text">Your Trusted #1 <a href="https://www.nop-station.com" target="_blank">nopCommerce Development Company</a>  </div>
+                </div>
+            }
+
+            @{
+                if (showLogoAtPageFooter)
+                {
+                    <div class="footer-logo">
+                        <div class="footer-logo-box"> <img src="@footerLogoPictureUrl" /> </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="footer-block footer-logo" style="display:none">
+
+                    </div>
+                }
+            }
+        </div>
+        <div class="footer-lower">
+            @await Component.InvokeAsync(typeof(StoreThemeSelectorViewComponent))
+        </div>
+    </div>
+
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer })
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.footer-block .title').on('click', function () {
+            $(this).children("span").children("i").toggleClass("icon-minus icon-plus");
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 769) {
+                $(this).siblings('.list').slideToggle('slow');
+            }
+        });
+    });
+</script>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .title').on('click', function () {
+            $(this).children("span").children("i").toggleClass("icon-minus icon-plus");
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            $(this).siblings('.listbox').slideToggle('slow');
+        });
+    });
+</script>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .filter-title').on('click', function () {
+            $(this).children("span").children("i").toggleClass("icon-minus icon-plus");
+            var parentWidth = $(this).parent('.product-filter').width();
+
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            $(this).siblings('.filter-content').slideToggle('slow');
+            $(this).siblings('.filter-content').css('width', parentWidth);
+        });
+    });
+</script>
+
+<nop-antiforgery-token/>

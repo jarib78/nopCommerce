@@ -1,0 +1,19 @@
+﻿@model CustomerNavigationModel
+<div class="block block-account-navigation">
+    <div class="title">
+        <strong>@T("Account.Navigation")</strong>
+        <span><i class="icon-minus"></i></span>
+    </div>
+    <div class="listbox" style="display: block;">
+        <ul class="list">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationBefore, additionalData = Model })
+            @foreach (var item in Model.CustomerNavigationItems)
+            {
+                <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                    <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
+                </li>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationAfter, additionalData = Model })
+        </ul>
+    </div>
+</div>

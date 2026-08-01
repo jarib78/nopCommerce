@@ -1,0 +1,145 @@
+﻿@using Nop.Core
+@model PublicModel
+@inject Nop.Core.IWebHelper webHelper
+@inject IThemeContext themeContext
+@inject IWorkContext workContext
+
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    //add main CSS file
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/DownTown/Content/css/down_blognews.rtl.css", string.Empty, true);
+    }
+    else
+    {
+        NopHtml.AppendCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/DownTown/Content/css/down_blognews.css", string.Empty, true);
+    }
+}
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area">
+        @if (Model.BlogPosts.Any())
+        {
+            var guid = Guid.NewGuid().ToString().Replace('-', '_');
+
+            <div class=" container latest-blog-container py-4 mb-5">
+                <div class="navigations">
+                    <div class="swiper-button-next blog-swiper-next-@(guid)"></div>
+                    <div class="swiper-button-prev blog-swiper-prev-@(guid)"></div>
+                </div>
+                <div class="custom-container-fluid swiper" id="blog-@(guid)">
+                    <h2 class="title-container">@T("NopStation.BlogNews.Home.LatestBlog")</h2>
+                    <div class="row pb-3 swiper-wrapper">
+                        @foreach (var item in Model.BlogPosts)
+                        {
+                            <div class="col-sm-3 swiper-slide">
+                                <div class="single-blog  bg-white">
+                                    <div class="blog-image">
+                                        <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                    </div>
+                                    <div class="blog-description">
+                                        <h4 class="text-ellipsis"><a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h4>
+                                        <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                        <div class="post-body">
+                                            <p>@Html.Raw(@item.BodyOverview)</p>
+                                        </div>
+                                        <a class="blog-link" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestBlog.ReadMore")</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <script asp-location="Footer">
+                    $(document).ready(function () {
+                        var carousel@(guid) = new Swiper("#blog-@(guid)", {
+                            observer: true,
+                            observeParents: true,
+                            spaceBetween: 8,
+                            breakpoints: {
+                                0: {
+                                    slidesPerView: 1
+                                },
+                                767: {
+                                    slidesPerView: 1
+                                },
+                                992: {
+                                    slidesPerView: 1
+                                }
+                            },
+                            navigation: {
+                                nextEl: ".blog-swiper-next-@guid",
+                                prevEl: ".blog-swiper-prev-@guid ",
+                            },
+
+                        });
+                    });
+                </script>
+            </div>
+        }
+
+        @if (Model.NewsItems.Any())
+        {
+            var guidNews = Guid.NewGuid().ToString().Replace('-', '_');
+            <div class="container latest-news-container">
+                <h2 class="title-container">@T("NopStation.BlogNews.Home.LatestNews")</h2>
+                <div class="navigations">
+                    <div class="swiper-button-next blog-swiper-next-@(guidNews)"></div>
+                    <div class="swiper-button-prev blog-swiper-prev-@(guidNews)"></div>
+                </div>
+                <div class="single-news mb-5 swiper" id="blog-@(guidNews)">
+                    <div class="row swiper-wrapper">
+                        @foreach (var item in Model.NewsItems)
+                        {
+                            <div class="col-sm-6 swiper-slide">
+                                <div class="news-box-inner">
+                                    <div class="blog-image">
+                                        <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+
+                                    </div>
+                                    <div class="blog-description">
+                                        <h4 class="text-ellipsis"><a class="post-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a></h4>
+                                        <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                        <div class="post-body">
+                                            <p> @Html.Raw(@item.ShortDescription)</p>
+                                        </div>
+                                        <a class="blog-link" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <script asp-location="Footer">
+                    $(document).ready(function () {
+                        var carousel@(guidNews) = new Swiper("#blog-@(guidNews)", {
+                            observer: true,
+                            observeParents: true,
+                            spaceBetween: 20,
+                            breakpoints: {
+                                0: {
+                                    slidesPerView: 1
+                                },
+                                767: {
+                                    slidesPerView: 2
+                                },
+                                992: {
+                                    slidesPerView: 3
+                                }
+                            },
+                            navigation: {
+                                nextEl: ".blog-swiper-next-@guidNews",
+                                prevEl: ".blog-swiper-prev-@guidNews ",
+                            },
+
+                        });
+                    });
+                </script>
+            </div>
+        }
+    </div>
+}

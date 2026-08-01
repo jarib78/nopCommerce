@@ -1,0 +1,32 @@
+﻿@using NopStation.Plugin.Widgets.DealOfTheDay.Areas.Admin.Models
+@model DealOfTheDayModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.NopStation.DealOfTheDay.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("DealOfTheDays");
+}
+
+<form asp-controller="DealOfTheDay" asp-action="Create" method="post" id="dealoftheday-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.NopStation.DealOfTheDay.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.NopStation.DealOfTheDay.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.cshtml", Model)
+</form>

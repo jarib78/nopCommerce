@@ -1,0 +1,25 @@
+﻿@using NopStation.Plugin.Widgets.DealOfTheDay.Areas.Admin.Models
+@model DealOfTheDayModel
+
+@{
+    const string hideInfoBlockAttributeName = "DealOfTheDayPage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    const string hidePropertiesBlockAttributeName = "DealOfTheDayPage.HidePropertiesBlock";
+    var hidePropertiesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePropertiesBlockAttributeName);
+
+    const string hideItemsBlockAttributeName = "DealOfTheDayPage.HideItemsBlock";
+    var hideItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideItemsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-cards id="dealoftheday-panels">
+            <nop-card asp-name="dealoftheday-info" asp-icon="fa fa-info" asp-title="@T("Admin.NopStation.DealOfTheDay.Tab.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+            <nop-card asp-name="dealoftheday-properties" asp-icon="fa fa-bars" asp-title="@T("Admin.NopStation.DealOfTheDay.Tab.Properties")" asp-hide-block-attribute-name="@hidePropertiesBlockAttributeName" asp-hide="@hidePropertiesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Properties", Model)</nop-card>
+        </nop-cards>
+    </div>
+</div>

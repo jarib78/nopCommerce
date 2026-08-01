@@ -1,0 +1,160 @@
+@using Nop.Web.Areas.Admin.Components
+@model ConfigurationModel
+
+@{
+    Layout = "_AdminLayout";
+    NopHtml.SetActiveMenuItemSystemName("BeautyShop.Configuration");
+
+    ViewBag.PageTitle = T("Admin.NopStation.Theme.BeautyShop.Configuration").Text;
+    
+    NopHtml.AddScriptParts(ResourceLocation.Footer,"/lib_npm/farbstastic/farbtastic.min.js");
+    NopHtml.AddCssFileParts("/lib_npm/farbstastic/farbtastic.css");
+}
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.EnableImageLazyLoad)").change(toggleLazyLoadPictureId);
+        $("#@Html.IdFor(model => model.ShowSupportedCardsPictureAtPageFooter)").change(toggleSupportedCardsPictureId);
+        $("#@Html.IdFor(model => model.ShowLogoAtPageFooter)").change(toggleFooterLogoPictureId);
+        $("#@Html.IdFor(model => model.EnableDescriptionBoxOne)").change(toggleEnableDescriptionBoxOne);
+        $("#@Html.IdFor(model => model.EnableDescriptionBoxTwo)").change(toggleEnableDescriptionBoxTwo);
+        $("#@Html.IdFor(model => model.EnableDescriptionBoxThree)").change(toggleEnableDescriptionBoxThree);
+        $("#@Html.IdFor(model => model.EnableDescriptionBoxFour)").change(toggleEnableDescriptionBoxFour);
+
+        $("#@Html.IdFor(model => model.ShowNewsLetterBackgroundPicture)").change(toggleNewsletterBackgroundPictureId);
+        $("#@Html.IdFor(model => model.ShowBreadcrumbPicture)").change(toggleBreadcrumbPictureId);
+
+        $("#@Html.IdFor(model => model.EnableThemeCustomization)").change(toggleEnableThemeCustomization);
+
+        toggleLazyLoadPictureId();
+        toggleSupportedCardsPictureId();
+        toggleFooterLogoPictureId();
+        toggleEnableDescriptionBoxOne();
+        toggleEnableDescriptionBoxTwo();
+        toggleEnableDescriptionBoxThree();
+        toggleEnableDescriptionBoxFour();
+        toggleNewsletterBackgroundPictureId();
+        toggleBreadcrumbPictureId();
+        toggleEnableThemeCustomization();
+
+    });
+
+    function toggleLazyLoadPictureId() {
+        if ($('#@Html.IdFor(model => model.EnableImageLazyLoad)').is(':checked')) {
+            $('#pnlLazyLoadPictureId').show();
+        } else {
+            $('#pnlLazyLoadPictureId').hide();
+        }
+    }
+
+    function toggleSupportedCardsPictureId() {
+        if ($('#@Html.IdFor(model => model.ShowSupportedCardsPictureAtPageFooter)').is(':checked')) {
+            $('#pnlSupportedCardsPictureId').show();
+        } else {
+            $('#pnlSupportedCardsPictureId').hide();
+        }
+    }
+
+    function toggleFooterLogoPictureId() {
+        if ($('#@Html.IdFor(model => model.ShowLogoAtPageFooter)').is(':checked')) {
+            $('#pnlFooterLogoPictureId').show();
+        } else {
+            $('#pnlFooterLogoPictureId').hide();
+        }
+    }
+
+    function toggleEnableDescriptionBoxOne() {
+        if ($('#@Html.IdFor(model => model.EnableDescriptionBoxOne)').is(':checked')) {
+            $('#pnlEnableDescriptionBoxOne').show();
+        } else {
+            $('#pnlEnableDescriptionBoxOne').hide();
+        }
+    }
+
+    function toggleEnableDescriptionBoxTwo() {
+        if ($('#@Html.IdFor(model => model.EnableDescriptionBoxTwo)').is(':checked')) {
+            $('#pnlEnableDescriptionBoxTwo').show();
+        } else {
+            $('#pnlEnableDescriptionBoxTwo').hide();
+        }
+    }
+
+    function toggleEnableDescriptionBoxThree() {
+        if ($('#@Html.IdFor(model => model.EnableDescriptionBoxThree)').is(':checked')) {
+            $('#pnlEnableDescriptionBoxThree').show();
+        } else {
+            $('#pnlEnableDescriptionBoxThree').hide();
+        }
+    }
+
+    function toggleEnableDescriptionBoxFour() {
+        if ($('#@Html.IdFor(model => model.EnableDescriptionBoxFour)').is(':checked')) {
+            $('#pnlEnableDescriptionBoxFour').show();
+        } else {
+            $('#pnlEnableDescriptionBoxFour').hide();
+        }
+    }
+
+
+    function toggleNewsletterBackgroundPictureId() {
+        if ($('#@Html.IdFor(model => model.ShowNewsLetterBackgroundPicture)').is(':checked')) {
+            $('#pnlNewsLetterBackgroundId').show();
+        } else {
+            $('#pnlNewsLetterBackgroundId').hide();
+        }
+    }
+
+
+    function toggleBreadcrumbPictureId() {
+        if ($('#@Html.IdFor(model => model.ShowBreadcrumbPicture)').is(':checked')) {
+            $('#pnlBreadcrumbPictureId').show();
+        } else {
+            $('#pnlBreadcrumbPictureId').hide();
+        }
+    }
+
+    function toggleEnableThemeCustomization() {
+        if ($('#@Html.IdFor(model => model.EnableThemeCustomization)').is(':checked')) {
+            $('#pnlThemeCustomization').show();
+        } else {
+            $('#pnlThemeCustomization').hide();
+        }
+    }
+
+</script>
+
+@{
+    const string hideInfoBlockAttributeName = "BeautyShopConfigurationPage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    const string hideDescriptionBlockAttributeName = "BeautyShopConfigurationPage.HideDescriptionBlock";
+    var hideDescriptionBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDescriptionBlockAttributeName);
+}
+
+<form asp-controller="BeautyShop" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.NopStation.Theme.BeautyShop.Configuration")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                <div asp-validation-summary="All"></div>
+                <nop-cards id="ocarousel-cards">
+                    <nop-card asp-name="tab-general" asp-icon="fas fa-info" asp-title="@T("Admin.NopStation.Theme.BeautyShop.Configuration.TabTitle.GeneralSettings")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_Configure.GeneralSettings", Model)</nop-card>
+                    <nop-card asp-name="tab-theme-customization" asp-icon="fas fa-palette" asp-title="@T("Admin.NopStation.Theme.BeautyShop.Configuration.TabTitle.ThemeCustomization")" asp-hide-block-attribute-name="@hideDescriptionBlockAttributeName" asp-hide="@hideDescriptionBlock" asp-advanced="false">@await Html.PartialAsync("_Configure.ThemeCustomization", Model)</nop-card>
+                    <nop-card asp-name="tab-footer-description" asp-icon="fas fa-bars" asp-title="@T("Admin.NopStation.Theme.BeautyShop.Configuration.TabTitle.FooterTopDescription")" asp-hide-block-attribute-name="@hideDescriptionBlockAttributeName" asp-hide="@hideDescriptionBlock" asp-advanced="false">@await Html.PartialAsync("_Configure.FooterTopDescription", Model)</nop-card>
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

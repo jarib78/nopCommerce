@@ -1,0 +1,54 @@
+﻿@model MenuItemModel
+
+<li class="mm-nav-item dropdown-menu-list @Model.CssClass" data-item-id="@Model.Id" role="menuitem">
+    @await Html.PartialAsync("_MenuItem.cshtml", Model)
+    <div class="mm-dropdown">
+        <ul class="mm-dropdown-list" role="menu" aria-label="@Model.Title">
+            @foreach (var item in Model.ChildrenItems)
+            {
+                <li class="mm-nav-item has-submenu" role="menuitem">
+                    <a href="@(string.IsNullOrEmpty(item.Url) ? "#" : item.Url)" class="mm-nav-link @(string.IsNullOrEmpty(item.Url) ? "menu__link--inactive" : "")">
+                        @if (item.Picture is not null)
+                        {
+                            <div class="nav-featured-img">
+                                <span style="background-image: url('@item.Picture.ImageUrl')"></span>
+                            </div>
+                        }
+                        <span>@item.Title</span>
+                    </a>
+
+                    @if (item.ChildrenItems.Any())
+                    {
+                        <ul class="sublist first-level">
+                            @foreach (var menuItem in item.ChildrenItems)
+                            {
+                                <li class="mm-nav-item @(menuItem.ChildrenItems.Any() ? "has-submenu" : "")">
+                                    <a class="mm-nav-link" href="@(string.IsNullOrEmpty(menuItem.Url) ? "#" : menuItem.Url)">
+                                        <span>@menuItem.Title</span>
+                                    </a>
+                                    @if (menuItem.ChildrenItems.Any())
+                                    {
+                                        <ul class="sublist">
+                                            @foreach (var subMenuItem in menuItem.ChildrenItems)
+                                            {
+                                                <li class="mm-nav-item">
+                                                    <a class="mm-nav-link" href="@(string.IsNullOrEmpty(subMenuItem.Url) ? "#" : subMenuItem.Url)">
+                                                        <span>@subMenuItem.Title</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="sublist first-level"></ul>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</li>

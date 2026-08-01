@@ -1,0 +1,173 @@
+﻿@model MenuModel
+
+@using Nop.Core.Domain.Menus;
+
+<div class="megamenu-header-link">
+    <ul id="megamenu-header-link-list">
+        @foreach (var menuItem in Model.Items)
+        {
+            @if (menuItem.ChildrenItems.Any())
+            {
+                @switch (menuItem.Template)
+                {
+                    case MenuItemTemplate.Grid:
+                        @await Html.PartialAsync("_MenuItem.Grid.cshtml", menuItem)
+                        break;
+                    default:
+                        @await Html.PartialAsync("_MenuItem.List.cshtml", menuItem)
+                        break;
+                }
+            }
+            else
+            {
+                <li>
+                    @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+                </li>
+            }
+        }
+    </ul>
+</div>
+<div class="mm-navbar">
+    <ul class="mm-navbar-nav">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter })
+    </ul>
+</div>
+
+<div class="top-menu mm-navbar mobile mobile-menu">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore })
+    <button class="close-mobile-menu">
+        <i class="icon-close beautyShop-primary-color-bg" id="colseMenu"></i>
+    </button>
+
+    <ul class="mm-navbar-nav">
+        @foreach (var menuItem in Model.Items)
+        {
+            @if (menuItem.ChildrenItems.Any())
+            {
+                <li class="mm-nav-item has-submenu">
+                    @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+                    <div class="sublist-toggle beautyShop-primary-color-text"></div>
+                    <ul class="mm-dropdown-list sublist first-level">
+                        <li class="sublist-close-button">
+                            <button class="d-inline-flex mm-back-button beautyShop-primary-color-text">
+                                <i class="icon icon-left-arrow"></i>  @T("Common.Back")
+                            </button>
+                        </li>
+                        @foreach (var item in menuItem.ChildrenItems)
+                        {
+                            <li class="mm-nav-item @(item.ChildrenItems.Any() ? "has-submenu" : "")">
+                                <a class="mm-nav-link" href="@(string.IsNullOrEmpty(item.Url) ? "#" : item.Url)">
+                                    <span>@item.Title</span>
+                                </a>
+                                @if (item.ChildrenItems.Any())
+                                {
+                                    <div class="sublist-toggle beautyShop-primary-color-text"></div>
+                                    <ul class="sublist first-level">
+                                        <li class="sublist-close-button">
+                                            <button class="d-inline-flex mm-back-button beautyShop-primary-color-text">
+                                                <i class="icon icon-left-arrow"></i>  @T("Common.Back")
+                                            </button>
+                                        </li>
+                                        @foreach (var subItem in item.ChildrenItems)
+                                        {
+                                            <li class="mm-nav-item">
+                                                <a class="mm-nav-link" href="@(string.IsNullOrEmpty(subItem.Url) ? "#" : subItem.Url)">
+                                                    <span>@subItem.Title</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li class="mm-nav-item">
+                    @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+                </li>
+            }
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
+    </ul>
+</div>
+
+<div class="bg-overlay"></div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+
+        var cartLinkList = $("#other-link-list").html();
+        $("#other-links").prepend(cartLinkList);
+        $(".header-other-link-items").remove();
+
+        // Count first sublist items & assign class accordingly
+        $('.sublist.first-level').each(function () {
+            var navItem = $(this).children('li:not(.sublist-close-button):not(.mm-nav-img)');
+            var navItems = navItem.length;
+            if ((navItems == 4) || (navItems > 4)) {
+                $(this).addClass("col4");
+            }
+            if (navItems == 3) {
+                $(this).addClass("col3");
+            }
+            if (navItems == 2) {
+                $(this).addClass("col2");
+            }
+            if (navItems == 1) {
+                $(this).addClass("col1");
+            }
+        });
+
+        $(".mm-back-button").on("click", function (e) {
+            $(this).parent(".mm-navbar.active").removeClass("active");
+            $(this).parent(".sublist-close-button").parent(".sublist.active").removeClass("active");
+            $(this).parent(".sublist-close-button").parent(".mm-dropdown-list").parent(".mm-dropdown.active").removeClass("active");
+            if ($(".mm-navbar").hasClass("active")) {
+
+            } else {
+                $("body").removeClass("mm-menu-opened");
+                $(".header-menu").removeClass("active");
+            }
+            e.stopPropagation();
+        });
+        $(".header-logo .icon").on("click", function (e) {
+            $(".mm-navbar.mobile").addClass("active");
+            $(".header-menu").addClass("active");
+            $(".bg-overlay").addClass("active");
+            $("body").addClass("mm-menu-opened");
+            e.stopPropagation();
+        });
+
+        $(".mm-nav-item .sublist-toggle").on("click", function (e) {
+            e.preventDefault();
+            $(this).siblings(".sublist").addClass("active");
+            $(this).siblings(".mm-dropdown").addClass("active");
+            e.stopPropagation();
+        });
+
+        $(".mm-navbar").on("click", function (e) {
+            e.stopPropagation();
+        });
+
+        function menuHide() {
+            $(".mm-navbar.mobile, .sublist").removeClass("active");
+            $(".bg-overlay").removeClass("active");
+            $(".mm-dropdown.active").removeClass("active");
+            $("body").removeClass("mm-menu-opened");
+        }
+
+        $(window).on("resize", function () {
+            menuHide();
+        });
+        $(document).on("click", function () {
+            menuHide();
+        });
+        $("#colseMenu").on("click", function () {
+            menuHide();
+        });
+    });
+</script>

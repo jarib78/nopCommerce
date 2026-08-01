@@ -1,0 +1,30 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+<<<<<<<< HEAD:src/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/Kingdom/Views/_ViewImports.cshtml
+@addTagHelper *, NopStation.Plugin.Misc.Actions
+@inject INopHtmlHelper NopHtml
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Web.Extensions
+========
+@inject INopHtmlHelper NopHtml
+@inject INopUrlHelper NopUrl
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Web.Extensions
+@using Nop.Web.Framework.Mvc.Routing
+@using Nop.Web.Framework.UI
+>>>>>>>> 4.90-develop:src/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/KidsToys/Views/_ViewImports.cshtml
+@using Nop.Web.Framework.Extensions
+@using Nop.Web.Framework.Security.Captcha
+@using Nop.Web.Framework.Security.Honeypot
+@using Nop.Web.Framework.Themes
+<<<<<<<< HEAD:src/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/Kingdom/Views/_ViewImports.cshtml
+@using Nop.Web.Framework.UI
+========
+>>>>>>>> 4.90-develop:src/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/KidsToys/Views/_ViewImports.cshtml
+@using NopStation.Plugin.Widgets.BlogNews.Models

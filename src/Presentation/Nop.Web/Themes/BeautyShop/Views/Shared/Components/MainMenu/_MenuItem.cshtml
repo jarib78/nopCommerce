@@ -1,0 +1,7 @@
+﻿@model MenuItemModel
+
+@{
+    var href = !string.IsNullOrEmpty(Model.Url) ? Model.Url : "#";
+}
+
+<a href="@href" class="mm-nav-link">@Model.Title</a>

@@ -1,0 +1,123 @@
+﻿@model PublicModel
+
+@using Nop.Core
+
+@inject Nop.Core.IWebHelper webHelper
+@inject IThemeContext themeContext
+@inject IWorkContext workContext
+
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    //add main CSS file
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/FreshLand/Content/css/styles.rtl.css", string.Empty, true);
+    }
+    else
+    {
+        NopHtml.AppendCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/FreshLand/Content/css/styles.css", string.Empty, true);
+    }
+}
+
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area">
+        @if (Model.BlogPosts.Any())
+        {
+            var guid_bolg = Guid.NewGuid().ToString().Replace('-', '_');
+
+            <div class="news-list-homepage">
+                <div class="swiper" id="smart-blogs-@(guid_bolg)" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
+                    <div class="title" id="smart-blogs-title-@(guid_bolg)">
+                        <strong>
+                            @T("NopStation.BlogNews.Home.LatestBlog")
+                        </strong>  
+                        <div class="swiper-nav">
+                            <div class=" icon-right-arrow-2"></div>
+                            <div class=" icon-left-arrow-2"></div>
+                        </div>
+                    </div>
+                    <div class="news-items blog-items swiper-wrapper">
+                        @foreach (var item in Model.BlogPosts)
+                        {
+                            <div class="news-item blog-item swiper-slide">
+                                <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                <div class="blog-date"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                <div class="title-wrapper">
+                                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })"><span>@item.Title</span></a>
+                                    <a class="blog-link" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestBlog.ReadMore")</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    var carousel@(guid_bolg) = new Swiper("#smart-blogs-@(guid_bolg)", {
+                        slidesPerView: "auto",
+                        lazy: false,
+                        navigation: {
+                            nextEl: "#smart-blogs-title-@(guid_bolg) .icon-right-arrow-2",
+                            prevEl: "#smart-blogs-title-@(guid_bolg) .icon-left-arrow-2",
+                        },
+                    });
+                        });
+            </script>
+        }
+
+        @if (Model.NewsItems.Any())
+        {
+            var guid_news = Guid.NewGuid().ToString().Replace('-', '_');
+
+            <div class="news-list-homepage">
+                <div class="swiper" id="smart-news-@(guid_news)" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
+                    <div class="title" id="smart-news-title-@(guid_news)">
+                        <strong>
+                            @T("NopStation.BlogNews.Home.LatestNews")
+                        </strong>
+                        <div class="swiper-nav">
+                            <div class=" icon-right-arrow-2"></div>
+                            <div class=" icon-left-arrow-2"></div>
+                        </div>
+                    </div>
+                    <div class="news-items swiper-wrapper">
+                        @foreach (var item in Model.NewsItems)
+                        {
+                            <div class="news-item swiper-slide">
+                                <div class="image-wrapper">
+                                    <img src="@item.PictureUrl" alt="@item.AltAttribute" />
+                                </div>
+                                <div class="news-head">
+                                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a>
+                                    <div class="news-date">
+                                        <span>@item.CreatedOnUtcStr</span>
+                                        <span>(@item.TotalComments)</span>
+                                    </div>
+                                </div>
+                                <div class="news-body">
+                                    <p> @Html.Raw(@item.ShortDescription)</p>
+                                </div>
+                                <div class="buttons">
+                                    <a class="read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    var carousel@(guid_news) = new Swiper("#smart-news-@(guid_news)", {
+                        slidesPerView: "auto",
+                        lazy: false,
+                        navigation: {
+                            nextEl: "#smart-news-title-@(guid_news) .icon-right-arrow-2",
+                            prevEl: "#smart-news-title-@(guid_news) .icon-left-arrow-2",
+                        },
+                    });
+                        });
+            </script>
+        }
+    </div>
+}

@@ -1,0 +1,21 @@
+¡Gracias por descargar Undertale Español Castellano! ¡Espero que disfrutes del juego!
+
+Traductor: ArceUseless (https://twitter.com/Rafael_Nicar)
+
+Agradecimientos a los betatesters (Sebgames, Gamemode1 y ElFran1245) por ayudar a que el parche sea lo mejor posible.
+Especial agradecimiento a Slayerbin por, además de corregir incontables faltas, retocar algunas de las imagenes.
+
+¡Para más información, actualizaciones del parche o reportar errores, visita nuestro servidor de Discord!
+
+¡¡¡AVISO!!! Este parche funciona en la versión 1.08 de Undertale. (La puedes ver en el menú principal)
+
+###################################
+INSTRUCCIONES DE INSTALACIÓN (PC)
+###################################
+
+ 1. Ejecuta DeltaPatcher (Puedes descargarlo aquí: https://www.romhacking.net/utilities/704/)
+ 2. Dirígete al directorio en el que tienes instalado Undertale 
+    	(En Steam lo puedes encontrar haciendo click derecho en el juego - Propiedades - Archivos Locales)
+ 3. Haz click en el icono de la carpeta junto a "Original File" y selecciona el archivo "data.win" de la carpeta de Undertale.
+ 4. Haz click en el icono de la carpeta junto a "XDelta patch" y selecciona el archivo "Parche1.2.1.xdelta" o "ParcheParaVersion1.2" si ya tienes instalada la última actualización de la traducción.
+ 5. ¡Disfruta del juego!

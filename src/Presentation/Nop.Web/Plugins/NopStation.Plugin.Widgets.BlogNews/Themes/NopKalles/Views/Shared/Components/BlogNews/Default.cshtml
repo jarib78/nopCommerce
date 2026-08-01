@@ -1,0 +1,98 @@
+﻿@using NopStation.Plugin.Widgets.BlogNews.Models
+@model PublicModel
+@inject Nop.Core.IWebHelper webHelper
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="blog-news-area">
+        @if (Model.BlogPosts.Any())
+        {
+            <div class="blog-list-homepage">
+                <div class="position-relative text-center clr-dark section-header">
+                    <h3 class="d-flex justify-content-center align-items-center text-uppercase section-title">
+                        <span>@T("NopStation.BlogNews.Home.LatestBlog")</span>
+                    </h3>
+                </div>
+                <div class="row blog-items">
+                    @foreach (var item in Model.BlogPosts)
+                    {
+                        <article class="col-12 col-md-3 col-lg-3 clr-gray et-lazy-img-2--hvr blog-item">
+                            <a class="of-h position-relative d-block mb-3 blog-item--img"
+                               href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                <span class="position-relative d-block w-100 h-100 et-lazy-img-2 blog-item--img-inner lazyload"
+                                      data-src="@item.PictureUrl" style="background-image: url('@item.PictureUrl')">
+                                    <img src="@item.PictureUrl" alt="@item.Title" class="d-none" />
+                                </span>
+                            </a>
+                            <div class="mb-3 blog-item--info">
+                                <h4 class="mt-0 mb-2 clr-dark blog-item--title">
+                                    <a class="blog-item--title-link" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                        @item.Title
+                                    </a>
+                                </h4>
+                                <span class="blog-item--date">
+                                    <span class="clr-dark">@item.CreatedOnUtcStr</span>
+                                </span>
+                            </div>
+
+                        </article>
+                    }
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-gray-2 btn-lg" href="@Url.RouteUrl(NopRouteNames.General.BLOG)" title="@T("NopStation.BlogNews.Home.ViewAll.Posts")">
+                            @T("NopStation.BlogNews.Home.ViewAll.Posts")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.NewsItems.Any())
+        {
+            <div class="blog-list-homepage">
+                <div class="position-relative text-center clr-dark section-header">
+                    <h3 class="d-flex justify-content-center align-items-center text-uppercase section-title">
+                        <span>@T("News")</span>
+                    </h3>
+                    <span class="d-block text-center clr-gray font-italic section-subtitle">
+                        @T("NewsBlockSubtitle")
+                    </span>
+                </div>
+                <div class="row blog-items">
+                    @foreach (var item in Model.NewsItems)
+                    {
+
+                        <article class="col-12 col-md-4 col-lg-4 clr-gray et-lazy-img-2--hvr blog-item">
+                            <a class="of-h position-relative d-block mb-3 blog-item--img"
+                               href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                <span class="position-relative d-block w-100 h-100 et-lazy-img-2 blog-item--img-inner lazyload"
+                                      data-src="@item.PictureUrl" style="background-image: url('@item.PictureUrl')">
+                                    <img src="@item.PictureUrl" alt="@item.Title" class="d-none" />
+                                </span>
+                            </a>
+                            <div class="mb-3 blog-item--info">
+                                <h4 class="mt-0 mb-2 clr-dark blog-item--title">
+                                    <a class="blog-item--title-link" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                        @item.Title
+                                    </a>
+                                </h4>
+                                <span class="blog-item--date">
+                                    @T("NewsOn") <span class="clr-dark">@item.CreatedOnUtcStr</span>
+                                </span>
+                            </div>
+                            <div class="blog-item--desc">
+                                @Html.Raw(item.ShortDescription)
+                            </div>
+                        </article>
+                    }
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-gray-2 btn-lg" href="@Url.RouteUrl(NopRouteNames.General.NEWS)" title="@T("News.ViewAll")">
+                            @T("News.ViewAll")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,82 @@
+﻿@model PublicModel
+
+@{
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+    if (supportRtl)
+    {
+        NopHtml.AddCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/Kingdom/Content/css/kingdom_blognews.rtl.css");
+    }
+    else
+    {
+        NopHtml.AddCssFileParts("~/Plugins/NopStation.Plugin.Widgets.BlogNews/Themes/Kingdom/Content/css/kingdom_blognews.css");
+    }
+}
+
+@if (Model.BlogPosts.Any() || Model.NewsItems.Any())
+{
+    <div class="custom-container blog-news-container container">
+        <div class="blog-news-area">
+            @if (Model.BlogPosts.Any())
+            {
+                <div class="latest-blog-container">
+                    <div class="custom-container-fluid">
+                        <h2 class="title-container">@T("NopStation.Theme.Kingdom.HomePage.BlogNews.LatestBlogs")</h2>
+                        <div class="view-all">
+                            <a href="@Url.RouteUrl("blog")">@T("NopStation.Theme.Kingdom.HomePage.BlogNews.ViewAll")</a>
+                        </div>
+                        <div class="blog-item-wrapper">
+                            @foreach (var item in Model.BlogPosts)
+                            {
+                                <div class="blog-item">
+                                    <div class="single-blog  bg-white">
+                                        <div class="blog-img">
+                                            <img src="@item.PictureUrl" alt="@item.AltAttribute" width="450" height="450" />
+                                        </div>
+                                        
+                                        <div class="date-time"><span class="">@item.CreatedOnUtcStr</span><span class="sr-only">(@item.TotalComments)</span></div>
+                                        <h4 class="text-ellipsis"><a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h4>
+                                        <div class="post-body">
+                                            <p>@item.BodyOverview</p>
+                                        </div>
+                                        <a class="blog-link" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestBlog.ReadMore")</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.NewsItems.Any())
+            {
+                <div class="latest-news-container">
+                    <h2 class="title-container">@T("NopStation.Theme.Kingdom.HomePage.BlogNews.LatestNews")</h2>
+                    <div class="view-all">
+                        <a href="@Url.RouteUrl("NewsArchive")">@T("NopStation.Theme.Kingdom.HomePage.BlogNews.ViewAll")</a>
+                    </div>
+                    <div class="single-news">
+                        <div class="news-item-wrapper">
+                            @foreach (var item in Model.NewsItems)
+                            {
+                                <div class="news-item">
+                                    <div class="news-box-inner">
+                                        <div class="news-img" style="background-image:url(@item.PictureUrl)">
+                                        </div>
+                                        <div class="news-details">
+                                            <h2 class="text-ellipsis"><a class="post-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a></h2>
+                                            <div class="date-time"><span class="pr-2">@item.CreatedOnUtcStr</span><span>(@item.TotalComments)</span></div>
+                                            <div class="post-body">
+                                                <p>@item.ShortDescription</p>
+                                            </div>
+                                            <a class="blog-link" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}    

@@ -1,0 +1,88 @@
+﻿@model PriceRangeFilterModel
+@using Nop.Core
+@inject IStoreContext storeContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@{
+    var store = await storeContext.GetCurrentStoreAsync();
+    NopHtml.AddScriptParts(ResourceLocation.Footer, "/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js");
+    var activecolor = await settingService.GetSettingByKeyAsync<string>("beautyShopSettings.PrimaryThemeColor", storeId: store.Id, loadSharedValueIfNotFound: true);
+}
+<style>
+    .ui-slider-range.ui-widget-header,
+    .ui-slider .ui-slider-handle {
+        background: @activecolor!important;
+    }
+</style>
+<div class="product-filter price-range-filter">
+    <div class="filter-title custom-title">
+        <strong>
+            @T("Filtering.PriceRangeFilter")
+        </strong>
+        <span><i class="icon-minus"></i></span>
+    </div>
+    <div class="filter-content">
+        <div class="maxmin-price-range">
+            <span>
+                <span class="from"></span>
+            </span>
+            <span>
+                <span class="to"></span>
+            </span>
+        </div>
+
+        <div id="price-range-slider"></div>
+
+        <div class="selected-price-range">
+            <span class="from"></span>
+            <span class="to"></span>
+        </div>
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var $priceRangeEl = $("#price-range-slider");
+                $priceRangeEl.slider({
+                    range: true,
+                    min: @Model.AvailablePriceRange.From,
+                    max: @Model.AvailablePriceRange.To,
+                    values: [
+                        @Model.SelectedPriceRange.From,
+                        @Model.SelectedPriceRange.To
+                    ],
+                    slide: function (event, ui) {
+                        setSelectedPriceRange(ui.values[0], ui.values[1]);
+                    },
+                    stop: function () {
+                        CatalogProducts.getProducts();
+                    }
+                });
+
+                setSelectedPriceRange(
+                    $priceRangeEl.slider("values", 0),
+                    $priceRangeEl.slider("values", 1)
+                );
+                setMaxMinPriceRange(
+                    $priceRangeEl.slider("values", 0),
+                    $priceRangeEl.slider("values", 1)
+                );
+
+                $(CatalogProducts).on('before', function (e) {
+                    var priceRange = $priceRangeEl.slider('values');
+                    if (priceRange && priceRange.length > 0) {
+                        e.payload.urlBuilder
+                            .addParameter('price', priceRange.join('-'));
+                    }
+                });
+            });
+
+            function setSelectedPriceRange(from, to) {
+                var $selectedPriceRangeEl = $('.selected-price-range');
+                $('.from', $selectedPriceRangeEl).html(from);
+                $('.to', $selectedPriceRangeEl).html(to);
+            }
+            function setMaxMinPriceRange(from, to) {
+                var $selectedPriceRangeEl = $('.maxmin-price-range');
+                $('.from', $selectedPriceRangeEl).html(from);
+                $('.to', $selectedPriceRangeEl).html(to);
+            }
+        </script>
+    </div>
+</div>

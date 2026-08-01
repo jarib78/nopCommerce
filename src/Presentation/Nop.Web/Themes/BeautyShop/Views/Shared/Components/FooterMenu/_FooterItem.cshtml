@@ -1,0 +1,24 @@
+@using Nop.Web.Models.Menus
+
+@model MenuItemModel
+
+<li class="footer-menu-item @Model.CssClass">
+    @if (!string.IsNullOrEmpty(Model.Url))
+    {
+        <a class="beautyShop-primary-color-hover" href="@Model.Url">@Model.Title</a>
+    }
+    else
+    {
+        <span>@Model.Title</span>
+    }
+
+    @if (Model.ChildrenItems?.Any() ?? false)
+    {
+        <ul class="sublist">
+            @foreach (var child in Model.ChildrenItems)
+            {
+                @await Html.PartialAsync("Components/FooterMenu/_FooterItem", child)
+            }
+        </ul>
+    }
+</li>

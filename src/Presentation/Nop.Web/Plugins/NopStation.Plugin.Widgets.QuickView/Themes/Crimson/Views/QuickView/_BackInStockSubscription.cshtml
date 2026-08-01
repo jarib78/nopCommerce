@@ -1,0 +1,16 @@
+﻿@model ProductDetailsModel
+@if (Model.DisplayBackInStockSubscription)
+{
+    <div class="back-in-stock-subscription">
+        <button type="button" id="back-in-stock-subscribe-@Model.Id" class="button-2 subscribe-button">
+            <i class="fa fa-envelope-o pr-2" aria-hidden="true"></i>@T("BackInStockSubscriptions.NotifyMeWhenAvailable")
+        </button>
+        <script>
+            $(document).ready(function () {
+                $("#back-in-stock-subscribe-@Model.Id").on('click', function() {
+                    displayPopupContentFromUrl('@Url.RouteUrl(NopRouteNames.Ajax.BACK_IN_STOCK_SUBSCRIBE_POPUP, new { productId = Model.Id })', '@T("BackInStockSubscriptions.NotifyMeWhenAvailable")');
+                });
+            });
+        </script>
+    </div>
+}

@@ -1,0 +1,23 @@
+﻿@using NopStation.Plugin.Widgets.DealOfTheDay.Models
+@model DealOfTheDayListModel
+
+@foreach (var dealoftheday in Model.DealOfTheDays)
+{
+    
+    var bg = dealoftheday.ShowBackgroundPicture ? $"style=\"background:url('{dealoftheday.BackgroundPictureUrl}') no-repeat center; background-size: cover;\"" : "";
+
+    <div class="ocarousel-grid" @bg>
+        @if (dealoftheday.DisplayTitle)
+        {
+            <div class="title">
+                <strong>@dealoftheday.Title</strong>
+            </div>
+        }
+
+        <div class="dealoftheday-container carousel-dealoftheday" data-dealofthedayid="@dealoftheday.Id">
+            <div class="loader">
+                <img src="~/Plugins/NopStation.Plugin.Widgets.DealOfTheDay/Contents/images/loader.gif" />
+            </div>
+        </div>
+    </div>
+}

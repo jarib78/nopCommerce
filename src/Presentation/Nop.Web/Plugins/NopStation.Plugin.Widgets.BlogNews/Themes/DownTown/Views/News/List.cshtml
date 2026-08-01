@@ -1,0 +1,85 @@
+﻿@using Nop.Core.Domain.News
+@using Nop.Web.Components
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.Mvc.Routing
+@using Nop.Web.Models.News
+@using NopStation.Plugin.Widgets.BlogNews
+@model NewsItemListModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.NewsArchive").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-news-list-page");
+}
+<div class="page news-list-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a>
+        <h1>@T("News")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageBeforeItems, additionalData = Model })
+        <div class="news-items blog-news-area   ">
+            <div class="latest-news-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model.NewsItems)
+                        {
+                            var pictureUrl = string.Empty;
+
+                            if (item.CustomProperties.ContainsKey(BlogNewsDefaults.BlogNewsUrlKey))
+                            {
+                                pictureUrl = item.CustomProperties[BlogNewsDefaults.BlogNewsUrlKey];
+                            }
+
+                            <div class="col-sm-6 swiper-slide">
+                                <div class="news-box-inner">
+                                    <div class="blog-image">
+                                        @* <img src="@item.PictureUrl" alt="@item.AltAttribute" title="@item.TitleAttribute" /> *@
+                                        <img src="@pictureUrl" alt="@item.Title" />
+
+                                    </div>
+                                    <div class="blog-description">
+                                        <h4 class="text-ellipsis">
+                                            <a class="post-title" href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))"> @item.Title</a>
+
+                                        </h4>
+                                        <div class="date-time"><span class="pr-2">@item.CreatedOn.ToString("D")</span></div>
+
+
+                                        <div class="post-body">
+                                            <p>
+                                                @Html.Raw(item.Short)
+
+                                            </p>
+                                        </div>
+                                        <a href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))" class=" blog-link">@T("NopStation.BlogNews.Home.LatestNews.ReadMore")</a>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+           
+        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!(await pager.IsEmpty()))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageAfterItems, additionalData = Model })
+    </div>
+</div>

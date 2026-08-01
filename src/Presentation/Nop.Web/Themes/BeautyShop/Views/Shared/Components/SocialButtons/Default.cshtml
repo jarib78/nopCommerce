@@ -1,0 +1,35 @@
+﻿@model SocialModel
+
+@using Nop.Core
+@inject IStoreContext storeContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@{
+    var instagramLink = await settingService.GetSettingByKeyAsync<string>("beautyShopSettings.InstagramLink", storeId: (await storeContext.GetCurrentStoreAsync()).Id, loadSharedValueIfNotFound: true);
+}
+
+<ul class="networks">
+    @if (!string.IsNullOrEmpty(Model.FacebookLink))
+    {
+        <li class="facebook"><a href="@Model.FacebookLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Facebook")<i class="icon-facebook beautyShop-primary-color-text"></i></a></li>
+    }
+    @if (!string.IsNullOrEmpty(Model.TwitterLink))
+    {
+        <li class="twitter"><a href="@Model.TwitterLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Twitter")<i class="icon-twitter beautyShop-primary-color-text"></i></a></li>
+    }
+
+    @if (!string.IsNullOrEmpty(instagramLink))
+    {
+        <li class="instagram"><a href="@instagramLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Instagram")<i class="icon-instagram beautyShop-primary-color-text"></i></a></li>
+
+    }
+
+
+    @*@if (Model.NewsEnabled)
+    {
+        <li class="rss"><a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})">@T("Footer.FollowUs.RSS")</a></li>
+    }*@
+    @if (!string.IsNullOrEmpty(Model.YoutubeLink))
+    {
+        <li class="youtube"><a href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Youtube")<i class="icon-youtube beautyShop-primary-color-text"></i></a></li>
+    }
+</ul>

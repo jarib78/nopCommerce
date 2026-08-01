@@ -1,0 +1,63 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@using Nop.Services.Stores
+@using Nop.Core.Domain.Catalog
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@inject IStoreContext storeContext
+@inject IStoreService storeService
+@inject CatalogSettings catalogSettings
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var allStore = await storeService.GetAllStoresAsync();
+    var storeId = 0;
+    if (allStore.Count > 1)
+    {
+        storeId = (await storeContext.GetCurrentStoreAsync())?.Id ?? 0;
+    }
+
+    //add main CSS file
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/beautyShopcustom_{storeId}.css", string.Empty, true);
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/megamenu.rtl.css");
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/responsive.rtl.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/beautyShop.rtl.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/rtl/owl.carousel.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/rtl/owl.theme.green.min.css", string.Empty);
+    }
+    else
+    {
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/megamenu.css");
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/responsive.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/beautyShop.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/owl.carousel.css", string.Empty);
+        NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/owl.theme.green.min.css", string.Empty);
+    }
+
+    NopHtml.AppendCssFileParts($"/Themes/{themeName}/Content/css/fonts.css");
+    //add swiper css file
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+
+
+    <link rel="preload" href="@($"/Themes/{themeName}/Content/fonts/icomoon.svg")" />
+    <link rel="preload" href="@($"/Themes/{themeName}/Content/fonts/icomoon.ttf")" />
+    <link rel="preload" href="@($"/Themes/{themeName}/Content/fonts/icomoon.eot")" />
+    <link rel="preload" href="@($"/Themes/{themeName}/Content/fonts/icomoon.woff")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Bold.ttf")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Bold.woff")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Medium.ttf")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Medium.woff")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Regular.ttf")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-Regular.woff")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-SemiBold.ttf")" />
+    <link rel="prefetch" href="@($"/Themes/{themeName}/Content/fonts/ElMessiri-SemiBold.woff")" />
+}

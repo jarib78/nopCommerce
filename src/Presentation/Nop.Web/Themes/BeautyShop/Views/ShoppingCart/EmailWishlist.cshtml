@@ -1,0 +1,104 @@
+﻿@model WishlistEmailAFriendModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Tax
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-email-a-friend-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text beautyShop-breadcrumb-title">
+                    @T("Wishlist.EmailAFriend.Title")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
+                                <span class="beautyShop-breadcrumb-text">@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span class="beautyShop-breadcrumb-text">@T("Wishlist.EmailAFriend.Title")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div class="page email-a-friend-page">
+    <div class="page-title">
+        <h1>@T("Wishlist.EmailAFriend.Title")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="@NopRouteNames.Standard.EMAIL_WISHLIST" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="FriendEmail" asp-postfix=":"></label>
+                            <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")" />
+                            <span asp-validation-for="FriendEmail"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="YourEmailAddress" asp-postfix=":"></label>
+                            <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")" />
+                            <span asp-validation-for="YourEmailAddress"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="PersonalMessage" asp-postfix=":"></label>
+                            <textarea asp-for="PersonalMessage" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")" class="personal-message"></textarea>
+                            <span asp-validation-for="PersonalMessage"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" name="send-email" class="beautyShop-primary-color-bg button-1 send-email-a-friend-button">@T("Wishlist.EmailAFriend.Button")</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>

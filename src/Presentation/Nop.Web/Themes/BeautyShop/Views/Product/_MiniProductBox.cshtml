@@ -1,0 +1,25 @@
+﻿@model ProductDetailsModel
+
+<div class="product-mini-picture">
+    <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="mini_main-product-img-lightbox-anchor-@Model.Id">
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="mini_main-product-img-@Model.Id" />
+    </a>
+</div>
+<div class="product-mini-price">
+    <div class="product-mini-name">
+        <p>
+            @Model.Name
+        </p>
+    </div>
+    <div class="product-price beautyShop-primary-color-text">
+        <span @if (string.IsNullOrWhiteSpace(Model.ProductPrice.PriceWithDiscount)) { <text> id="mini_price-value-@(Model.ProductPrice.ProductId)" class="price-value-@(Model.ProductPrice.ProductId)" </text> }>
+            @Html.Raw(Model.ProductPrice.Price)
+        </span>
+    </div>
+</div>
+
+
+
+
+
+

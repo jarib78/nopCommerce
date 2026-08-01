@@ -1,0 +1,172 @@
+﻿.ocarousel .item-box {
+  width: 100% !important;
+}
+
+.ocarousel .owl-dots {
+  display: none;
+}
+
+.ocarousel-grid {
+  margin: 0 0 50px;
+}
+
+  .ocarousel-grid .title {
+    margin: 0 0 30px;
+    padding: 0 0 15px;
+    font-size: 30px;
+    font-weight: normal;
+  }
+
+
+.dealoftheday-carousel .title {
+  font-size: 22px;
+  padding: 30px 0 30px 30px;
+}
+
+  .dealoftheday-carousel .title strong {
+    font-weight: normal;
+  }
+
+    .dealoftheday-carousel .title strong i {
+      padding-right: 8px;
+      vertical-align: bottom;
+      font-size: 26px;
+    }
+
+.carousel-dealoftheday .ocarousel .category-name,
+.carousel-dealoftheday .ocarousel .manufacturer-name {
+  font-weight: normal;
+  font-size: 18px;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.ocarousel-item {
+  margin: 0 0 80px;
+}
+
+.ocarousel-background {
+  padding: 50px 0 0;
+  position: relative;
+  margin-bottom: 80px;
+}
+
+  .ocarousel-background::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,0.7);
+    z-index: 0;
+  }
+
+  .ocarousel-background .custom-container {
+    position: relative;
+    z-index: 1;
+  }
+
+.count {
+  display: inline-block;
+  margin: 0 5px;
+  color: #fff;
+  font-size: 20px;
+}
+
+.dealoftheday-container.carousel-dealoftheday,
+.carousel-dealoftheday {
+  position: relative;
+  min-height: 350px;
+}
+
+.dealoftheday-container .loader img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dealoftheday-counter {
+  position: absolute;
+  right: 2%;
+  top: -22%;
+  display: flex;
+  align-items: center;
+}
+
+  .dealoftheday-counter i {
+    color: #fff;
+    font-size: 24px;
+    padding-right: 5px;
+  }
+
+.carousel-dealoftheday .ocarousel .owl-nav {
+  position: absolute;
+  top: 35%;
+  width: 100%;
+  opacity: 0;
+}
+
+
+  .carousel-dealoftheday .ocarousel .owl-nav button.owl-prev {
+    left: 0;
+  }
+
+  .carousel-dealoftheday .ocarousel .owl-nav button.owl-prev,
+  .carousel-dealoftheday .ocarousel .owl-nav button.owl-next {
+    background: #fff;
+    padding: 5px !important;
+    border: 1px solid #EBECED;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  }
+
+.ocarousel-grid.dealoftheday-carousel:hover .owl-nav {
+  opacity: 1;
+}
+
+@media(max-width: 1367px) {
+  .dealoftheday-counter {
+    top: -24%;
+  }
+}
+
+@media (max-width: 991px) {
+  .dealoftheday-counter {
+    top: -16%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dealoftheday-carousel .title {
+    padding: 15px 20px 50px;
+  }
+
+  .dealoftheday-counter {
+    top: -12%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+  }
+}
+
+@media (max-width: 650px) {
+  .dealoftheday-counter {
+    top: -14%;
+  }
+}
+
+@media (max-width: 575.9px) {
+  .dealoftheday-counter {
+    top: -9%;
+  }
+}
+
+@media (max-width: 481px) {
+  .dealoftheday-counter {
+    top: -11%;
+  }
+}

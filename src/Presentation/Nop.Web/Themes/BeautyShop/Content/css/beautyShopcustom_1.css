@@ -1,0 +1,75 @@
+       .beautyShop-primary-color-bg {
+        background-color: #ffa6a8 !important;
+        }
+
+        .beautyShop-primary-color-text {
+        color: #ffa6a8 !important;
+        }
+
+        .beautyShop-primary-color-border {
+        border-color: #ffa6a8 !important;
+        }
+
+        .beautyShop-primary-color-hover:hover {
+        color: #ffa6a8 !important;
+        }
+
+        .beautyShop-primary-color-bg-hover:hover {
+        background-color: #ffa6a8 !important;
+        }
+
+        .beautyShop-header-color {
+        background-color: #2a3391 !important;
+        }
+
+        .beautyShop-secondery-color-bg {
+        background-color:  !important;
+        }
+
+        .beautyShop-secondery-color-text {
+        color:  !important;
+        }
+
+        .beautyShop-secondery-color-border {
+        border-color:  !important;
+        }
+
+        .beautyShop-paragraph-text {
+        font-size: 0px !important;
+        }
+
+        .beautyShop-breadcrumb-title {
+        font-size: 0px !important;
+        }
+
+        .beautyShop-breadcrumb-text {
+        font-size: 0px !important;
+        }
+
+        .beautyShop-big-title {
+        font-size: 0px !important;
+        }
+
+        .beautyShop-medium-title {
+        font-size: 0px !important;
+        }
+
+        .beautyShop-small-title {
+        font-size: 0px !important;
+        }
+
+        p{
+        font-size: 0px !important;
+        }
+
+        .breadcrumb-current-item h4{
+        font-size: 0px !important;
+        }
+
+        .breadcrumb li *{
+        font-size: 0px !important;
+        }
+
+        .fieldset .title, .section .title {
+        font-size: 0px !important;
+        }

@@ -1,0 +1,61 @@
+@model ProductDetailsModel.ProductBreadcrumbModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Common
+
+@inject CommonSettings commonSettings
+@inject IWorkContext workContext
+@inject IStoreContext storeContext
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+
+@{
+    var store = await storeContext.GetCurrentStoreAsync();
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+    NopHtml.AddJsonLdParts(Model.JsonLd);
+
+
+}
+@if (Model.Enabled)
+{
+    <div class="breadcrumb" >
+        <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbBefore, additionalData = Model })
+            <li>
+                <span>
+                    <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
+                        <span>@T("Products.Breadcrumb.Top")</span>
+                    </a>                </span>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+            </li>
+            @{ int position = 1; }
+            @foreach (var category in Model.CategoryBreadcrumb)
+            {
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a class="beautyShop-primary-color-hover" href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = category.SeName }))" itemprop="item">
+                        <span itemprop="name">@category.Name</span>
+                    </a>
+                    <span class="delimiter">@breadcrumbDelimiter</span>
+                    <meta itemprop="position" content="@position" />
+                </li>
+                position++;
+            }
+
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <span  itemprop="name">@Model.ProductName</span>
+                <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
+                      id="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = Model.ProductSeName }))">
+                </span>
+                <meta itemprop="position" content="@position" />
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
+            </li>
+        </ul>
+    </div>
+}

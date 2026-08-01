@@ -1,0 +1,97 @@
+﻿@model PrivateMessageModel
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject CommonSettings commonSettings
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ViewPM").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-view-page");
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    var store = await storeContext.GetCurrentStoreAsync();
+    var showBreadcrumbBackground = await settingService.GetSettingByKeyAsync<bool>("beautyShopSettings.ShowBreadcrumbPicture", storeId: store.Id, loadSharedValueIfNotFound: true);
+    var breadcrumbBackgroundPictureUrl = "";
+    if (showBreadcrumbBackground)
+    {
+        var breadcrumbBackgroundPictureId = await settingService.GetSettingByKeyAsync<int>("beautyShopSettings.BreadcrumbPictureId", storeId: store.Id, loadSharedValueIfNotFound: true);
+        breadcrumbBackgroundPictureUrl = await pictureService.GetPictureUrlAsync(breadcrumbBackgroundPictureId);
+    }
+}
+@section Breadcrumb
+{
+
+    <div class="breadcrumb-background beautyShop-secondery-color-bg" style="background-image:url('@breadcrumbBackgroundPictureUrl');">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb-current-item">
+                <h4 class="beautyShop-primary-color-text">
+                    @T("PrivateMessages.View.ViewMessage")
+                </h4>
+            </div>
+            <div class="breadcrumb">
+                <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl("Homepage")">
+                                <span>@T("Products.Breadcrumb.Top")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <a class="beautyShop-primary-color-hover" href="@Url.RouteUrl("PrivateMessages")">
+                                <span>@T("PrivateMessages.PrivateMessages")</span>
+                            </a>
+                        </span>
+                        <span class="delimiter">@breadcrumbDelimiter</span>
+                    </li>
+                    <li>
+                        <span>
+                            <span>@T("PrivateMessages.View.ViewMessage")</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+<div class="page private-messages private-message-view-page">
+    <div class="page-title">
+        <h1>@T("PrivateMessages.View.ViewMessage")</h1>
+    </div>
+    <div class="page-body">
+        <div class="view-message">
+            <ul class="message-head">
+                <li class="sender">
+                    <label>@T("PrivateMessages.View.From")</label>
+                    <span>@Model.CustomerFromName</span>
+                </li>
+                <li class="recipient">
+                    <label>@T("PrivateMessages.View.To")</label>
+                    <span>@Model.CustomerToName</span>
+                </li>
+                <li class="subject">
+                    <label>@T("PrivateMessages.View.Subject")</label>
+                    <span>@Model.Subject</span>
+                </li>
+            </ul>
+            <div class="message-body beautyShop-primary-color-border">
+                @Html.Raw(Model.Message)
+            </div>
+        </div>
+        <div class="buttons">
+            <button type="button" class="button-1 reply-pm-button beautyShop-primary-color-bg" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.SEND_PM_REPLY, new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+
+            <button type="button" class="button-2 delete-pm-button beautyShop-primary-color-bg" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.DELETE_PM, new { privateMessageId = Model.Id })')">@T("PrivateMessages.View.DeleteButton")</button>
+
+            <button type="button" class="button-2 back-pm-button beautyShop-primary-color-bg" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.PRIVATE_MESSAGES)')">@T("PrivateMessages.View.BackButton")</button>
+        </div>
+    </div>
+</div>
