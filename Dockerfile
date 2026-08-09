@@ -51,4 +51,4 @@ COPY --from=build /app/published .
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
                             
-ENTRYPOINT ["dotnet", "Nop.Web.dll"]
+ENTRYPOINT ["sh", "-c", "ln -sf /app/persistent/plugins.json /app/App_Data/plugins.json && exec dotnet Nop.Web.dll"]
