@@ -1,5 +1,4 @@
 @model CheckoutCompletedModel
-@using System.Text
 @{
     Layout = "_ColumnsOne";
 
@@ -8,22 +7,6 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-checkout-page");
     NopHtml.AppendPageCssClassParts("html-order-completed-page");
-
-    var whatsappMessage = new StringBuilder();
-    whatsappMessage.AppendLine($"Hola, deseo coordinar el pago de la orden #{Model.CustomOrderNumber}.");
-    whatsappMessage.AppendLine();
-    whatsappMessage.AppendLine("Productos:");
-    foreach (var item in Model.Items)
-    {
-        whatsappMessage.AppendLine($"• {item.Quantity} x {item.ProductName}");
-        if (!string.IsNullOrWhiteSpace(item.AttributeInfo))
-            whatsappMessage.AppendLine($"  Personalización: {item.AttributeInfo}");
-    }
-    whatsappMessage.AppendLine();
-    whatsappMessage.AppendLine($"Total: {Model.OrderTotal}");
-    whatsappMessage.AppendLine($"Detalle: {Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderID = Model.OrderId }, Context.Request.Scheme)}");
-
-    var whatsappUrl = $"https://wa.me/{Model.WhatsAppNumber}?text={Uri.EscapeDataString(whatsappMessage.ToString())}";
 }
 <div class="page checkout-page order-completed-page">
     @if (!Model.OnePageCheckoutEnabled)
@@ -49,9 +32,6 @@
                 </div>
             </div>
             <div class="buttons">
-                <a class="button-1 whatsapp-order-button" href="@whatsappUrl" target="_blank" rel="noopener noreferrer">
-                    Enviar pedido por WhatsApp
-                </a>
                 <input type="button" value="@T("Checkout.ThankYou.Continue")" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)')" />
             </div>
         </div>
