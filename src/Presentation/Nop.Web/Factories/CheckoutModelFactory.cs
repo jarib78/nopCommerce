@@ -10,6 +10,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -35,13 +36,16 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly ILocalizationService _localizationService;
     protected readonly IOrderProcessingService _orderProcessingService;
+    protected readonly IOrderService _orderService;
     protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPaymentService _paymentService;
     protected readonly IPickupPluginManager _pickupPluginManager;
     protected readonly IPriceFormatter _priceFormatter;
+    protected readonly IProductService _productService;
     protected readonly IRewardPointService _rewardPointService;
     protected readonly IShippingPluginManager _shippingPluginManager;
     protected readonly IShippingService _shippingService;
@@ -70,13 +74,16 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         ICurrencyService currencyService,
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
+        IHtmlFormatter htmlFormatter,
         ILocalizationService localizationService,
         IOrderProcessingService orderProcessingService,
+        IOrderService orderService,
         IOrderTotalCalculationService orderTotalCalculationService,
         IPaymentPluginManager paymentPluginManager,
         IPaymentService paymentService,
         IPickupPluginManager pickupPluginManager,
         IPriceFormatter priceFormatter,
+        IProductService productService,
         IRewardPointService rewardPointService,
         IShippingPluginManager shippingPluginManager,
         IShippingService shippingService,
@@ -101,13 +108,16 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         _currencyService = currencyService;
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
+        _htmlFormatter = htmlFormatter;
         _localizationService = localizationService;
         _orderProcessingService = orderProcessingService;
+        _orderService = orderService;
         _orderTotalCalculationService = orderTotalCalculationService;
         _paymentPluginManager = paymentPluginManager;
         _paymentService = paymentService;
         _pickupPluginManager = pickupPluginManager;
         _priceFormatter = priceFormatter;
+        _productService = productService;
         _rewardPointService = rewardPointService;
         _shippingPluginManager = shippingPluginManager;
         _shippingService = shippingService;
@@ -579,18 +589,37 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the checkout completed model
     /// </returns>
-    public virtual Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
+    public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
     {
         ArgumentNullException.ThrowIfNull(order);
 
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+        var orderTotal = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
         var model = new CheckoutCompletedModel
         {
             OrderId = order.Id,
             OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled,
-            CustomOrderNumber = order.CustomOrderNumber
+            CustomOrderNumber = order.CustomOrderNumber,
+            OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotal, true, order.CustomerCurrencyCode, false, languageId),
+            WhatsAppNumber = new string((store.CompanyPhoneNumber ?? string.Empty).Where(char.IsDigit).ToArray())
         };
 
-        return Task.FromResult(model);
+        foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+        {
+            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            if (product is null)
+                continue;
+
+            model.Items.Add(new CheckoutCompletedOrderItemModel
+            {
+                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                Quantity = orderItem.Quantity,
+                AttributeInfo = _htmlFormatter.ConvertHtmlToPlainText(orderItem.AttributeDescription ?? string.Empty, true, true).Trim()
+            });
+        }
+
+        return model;
     }
 
     /// <summary>

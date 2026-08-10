@@ -6664,6 +6664,20 @@ label ~ * {
       text-decoration: underline;
     }
 
+.order-completed .whatsapp-order-button {
+  display: inline-block;
+  margin: 0 5px 10px;
+  padding: 12px 24px;
+  background-color: #25d366;
+  color: #fff;
+  text-decoration: none;
+}
+
+  .order-completed .whatsapp-order-button:hover {
+    background-color: #1ebe5d;
+    color: #fff;
+  }
+
 .opc .step-title {
   margin: 0 0 1px;
   overflow: hidden;
